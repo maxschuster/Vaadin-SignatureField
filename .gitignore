@@ -1,0 +1,8 @@
+.settings
+WebContent/VAADIN/widgetsets
+build
+deploy
+*.launch
+WebContent/VAADIN/gwt-unitCache*
+.classpath
+dist

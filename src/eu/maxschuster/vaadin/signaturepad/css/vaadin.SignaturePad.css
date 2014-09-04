@@ -1,0 +1,8 @@
+.v-signaturepad {
+	
+}
+
+.v-signaturepad canvas {
+	display: block;
+	background-color: #fff;
+}
