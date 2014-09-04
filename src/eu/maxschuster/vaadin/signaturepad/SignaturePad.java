@@ -5,6 +5,7 @@ import com.vaadin.annotations.StyleSheet;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
 @JavaScript({
+	"js/signature_pad/signature_pad.min.js",
 	"js/vaadin.SignaturePad.js"
 })
 @StyleSheet({
