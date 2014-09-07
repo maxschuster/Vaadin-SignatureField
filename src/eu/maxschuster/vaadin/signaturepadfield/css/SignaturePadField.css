@@ -1,0 +1,18 @@
+.v-signaturepadfield {
+	background: white;
+	border: 1px solid #c5c5c5;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.v-signaturepadfield.v-readonly {
+	background: #ddd;
+}
+
+.v-signaturepadfield canvas {
+	display: block;
+}
+
+.v-signaturepadfield.v-readonly canvas {
+	opacity: .5;
+}
