@@ -67,7 +67,7 @@ public class DemoUI extends UI {
 		setContent(layout);
 		
 		final BeanItemContainer<MimeType> mimeTypeContainer =
-				new BeanItemContainer<>(MimeType.class);
+				new BeanItemContainer<MimeType>(MimeType.class);
 		mimeTypeContainer.addBean(MimeType.PNG);
 		mimeTypeContainer.addBean(MimeType.JPEG);
 		
@@ -144,7 +144,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				boolean immediate = (boolean) event.getProperty().getValue();
+				boolean immediate = (Boolean) event.getProperty().getValue();
 				signaturePadField.setImmediate(immediate);
 			}
 		});
@@ -155,7 +155,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				boolean readOnly = (boolean) event.getProperty().getValue();
+				boolean readOnly = (Boolean) event.getProperty().getValue();
 				signaturePadField.setReadOnly(readOnly);
 			}
 		});
@@ -166,7 +166,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				boolean required = (boolean) event.getProperty().getValue();
+				boolean required = (Boolean) event.getProperty().getValue();
 				signaturePadField.setRequired(required);
 			}
 		});

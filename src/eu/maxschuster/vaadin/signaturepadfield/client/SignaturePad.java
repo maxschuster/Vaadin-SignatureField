@@ -261,7 +261,8 @@ public class SignaturePad extends JavaScriptObject {
 		var self = this;
 		self._wrappedBeginHandler_ = beginHandler;
 		self.onBegin = !beginHandler ? undefined : function() {
-			beginHandler.@eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.BeginHandler::onBegin(Leu/maxschuster/vaadin/signaturepad/client/SignaturePad;)(self);
+			beginHandler.@eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.BeginHandler::onBegin(
+				Leu/maxschuster/vaadin/signaturepadfield/client/SignaturePad;)(self);
 		};
 	}-*/;
 	
@@ -277,7 +278,8 @@ public class SignaturePad extends JavaScriptObject {
 		var self = this;
 		self._wrappedHandler_ = endHandler;
 		self.onEnd = !endHandler ? undefined : function() {
-			endHandler.@eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.EndHandler::onEnd(Leu/maxschuster/vaadin/signaturepad/client/SignaturePad;)(self);
+			endHandler.@eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.EndHandler::onEnd(
+				Leu/maxschuster/vaadin/signaturepadfield/client/SignaturePad;)(self);
 		};
 	}-*/;
 

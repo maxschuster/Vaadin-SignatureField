@@ -35,6 +35,12 @@ public class Signature {
 		data = findData(dataURL);
 	}
 	
+	public Signature(MimeType mimeType, byte[] data) {
+		super();
+		this.mimeType = mimeType;
+		this.data = data;
+	}
+
 	protected byte[] findData(String dataURL) throws RuntimeException {
 		int commaIndex = dataURL.indexOf(',');
 		if (commaIndex == -1) {
