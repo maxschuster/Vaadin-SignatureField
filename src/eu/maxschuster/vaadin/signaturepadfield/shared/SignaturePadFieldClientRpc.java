@@ -21,5 +21,7 @@ import com.vaadin.shared.communication.ClientRpc;
 public interface SignaturePadFieldClientRpc extends ClientRpc {
 	
 	public void clear();
+	
+	public void fromDataURL(MimeType mimeType, String dataURL);
 
 }

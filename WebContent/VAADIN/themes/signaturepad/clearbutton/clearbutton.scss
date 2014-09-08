@@ -1,0 +1,29 @@
+@mixin signaturepad-clearbutton {
+	
+	.v-clearbutton {
+		
+		position: relative;
+		
+		.v-clearbutton-button {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			text-decoration: none;
+			font-weight: bold;
+			color: #fff;
+			background: #ccc;
+			display: block;
+			text-align: center;
+			line-height: 16px;
+			width: 16px;
+			border-radius: 50%;
+			cursor: pointer;
+			
+			&:before {
+				content: "\00D7"
+			}
+		}
+		
+	}
+	
+}

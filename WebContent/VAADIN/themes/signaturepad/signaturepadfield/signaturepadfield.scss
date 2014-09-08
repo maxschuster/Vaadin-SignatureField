@@ -1,0 +1,22 @@
+@mixin signaturepad-signaturepadfield {
+	
+	.v-signaturepadfield {
+		background: white;
+		border: 1px solid #c5c5c5;
+		border-radius: 4px;
+		overflow: hidden;
+		
+		&.v-readonly {
+			background: #fafafa;
+			
+			canvas {
+				opacity: .5;
+			}
+		}
+		
+		canvas {
+			display: block;
+		}
+	}
+	
+}

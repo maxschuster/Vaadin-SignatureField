@@ -17,7 +17,8 @@
 package eu.maxschuster.vaadin.signaturepadfield;
 
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.annotations.StyleSheet;
+import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.ui.AbstractField;
 
 import eu.maxschuster.vaadin.signaturepadfield.shared.MimeType;
@@ -32,9 +33,6 @@ import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldState;
  */
 @JavaScript({
 	"js/signature_pad/signature_pad.js"
-})
-@StyleSheet({
-	"css/SignaturePadField.css"
 })
 public class SignaturePadField extends AbstractField<Signature> {
 	
@@ -56,7 +54,7 @@ public class SignaturePadField extends AbstractField<Signature> {
 				if (textValue != null) {
 					signature = new Signature(textValue);
 				}
-				SignaturePadField.this.setValue(signature);
+				SignaturePadField.this.setValue(signature, true);
 			}
 		});
 		
@@ -81,8 +79,25 @@ public class SignaturePadField extends AbstractField<Signature> {
 		return super.isEmpty();
 	}
 
+	@Override
+	protected void setValue(Signature newFieldValue, boolean repaintIsNotNeeded)
+			throws ReadOnlyException, ConversionException,
+			InvalidValueException {
+		Signature oldInternalValue = getInternalValue();
+		super.setValue(newFieldValue, repaintIsNotNeeded);
+		Signature newInternalValue = getInternalValue();
+		if (!repaintIsNotNeeded) {
+			if (newInternalValue != null && !newInternalValue.equals(oldInternalValue)) {
+				clientRpc.fromDataURL(
+						newInternalValue.getMimeType(), newInternalValue.toDataURL());
+			} else if (newInternalValue == null) {
+				clientRpc.clear();
+			}
+		}
+	}
+
 	public void clear() {
-		clientRpc.clear();
+		setValue(null);
 	}
 	
 	public Float getDotSize() {

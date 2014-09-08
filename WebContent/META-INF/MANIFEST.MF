@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Implementation-Title: SignaturePad
 Implementation-Version: 1.0.0
-Vaadin-Widgetsets: eu.maxschuster.vaadin.signaturepadfield.SignaturePadFiel
- dWidgetset
+Vaadin-Widgetsets: eu.maxschuster.vaadin.signaturepadfield.SignaturePa
+ dFieldWidgetset
 Vaadin-Package-Version: 1
 Class-Path: 
 

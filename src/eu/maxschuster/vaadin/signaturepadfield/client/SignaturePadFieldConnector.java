@@ -45,7 +45,13 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 
 			@Override
 			public void clear() {
-				clearSignaturePad();
+				getWidget().clear();
+			}
+
+			@Override
+			public void fromDataURL(MimeType mimeType, String dataURL) {
+				VSignaturePadField field = getWidget();
+				field.fromDataURL(dataURL);
 			}
 		});
 	}
@@ -54,8 +60,9 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 	protected void init() {
 		super.init();
 		
-		SignaturePad pad = getWidget().signaturePad;
-		pad.setEndHandler(new EndHandler() {
+		VSignaturePadField field = getWidget();
+		
+		field.setEndHandler(new EndHandler() {
 			
 			@Override
 			public void onEnd(SignaturePad signaturePad) {
@@ -65,7 +72,7 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 			}
 		});
 		
-		getWidget().canvas.addBlurHandler(new BlurHandler() {
+		field.addBlurHandler(new BlurHandler() {
 			
 			@Override
 			public void onBlur(BlurEvent event) {
@@ -76,15 +83,9 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 		});
 	}
 	
-	protected void clearSignaturePad() {
-		getWidget().signaturePad.clear();
-		serverRpc.setTextValue(null);
-	}
-	
 	protected String getDataURL(String mimeType) {
-		SignaturePad pad = getWidget().signaturePad;
-		return pad.isEmpty() ?
-				null : pad.toDataURL(mimeType);
+		VSignaturePadField field = getWidget();
+		return field.isEmpty() ? null : field.toDataURL(mimeType);
 	}
 	
 	protected MimeType getMimeType() {
@@ -123,13 +124,14 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 	@Override
 	public void onStateChanged(StateChangeEvent event) {
 		super.onStateChanged(event);
-		SignaturePad pad = getWidget().signaturePad;
 		SignaturePadFieldState state = getState();
-		pad.setDotSize(state.dotSize);
-		pad.setMaxWidth(state.maxWidth);
-		pad.setMinWidth(state.minWidth);
-		pad.setPenColor(state.penColor);
-		pad.setVelocityFilterWeight(state.velocityFilterWeight);
+		VSignaturePadField field = getWidget();
+		
+		field.setDotSize(state.dotSize);
+		field.setMaxWidth(state.maxWidth);
+		field.setMinWidth(state.minWidth);
+		field.setPenColor(state.penColor);
+		field.setVelocityFilterWeight(state.velocityFilterWeight);
 		
 		getWidget().setReadOnly(state.readOnly);
 		
@@ -140,8 +142,8 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 		}
 		
 		if (event.hasPropertyChanged("backgroundColor")) {
-			pad.setBackgroundColor(state.backgroundColor);
-			clearSignaturePad();
+			field.setBackgroundColor(state.backgroundColor);
+			getWidget().clear();
 		}
 		
 		if (event.hasPropertyChanged("height") ||

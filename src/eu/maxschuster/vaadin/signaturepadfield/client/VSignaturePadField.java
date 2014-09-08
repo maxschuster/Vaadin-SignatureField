@@ -21,8 +21,12 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.SimplePanel;
+
+import eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.BeginHandler;
+import eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.EndHandler;
 
 public class VSignaturePadField extends SimplePanel implements RequiresResize {
 	
@@ -39,11 +43,9 @@ public class VSignaturePadField extends SimplePanel implements RequiresResize {
      */
     public static final String CLASSNAME_FOCUS = "focus";
     
-    public final SignaturePad signaturePad;
+    private final SignaturePad signaturePad;
     
-    public final Canvas canvas;
-    
-    private boolean readOnly;
+    private final Canvas canvas;
 
 	public VSignaturePadField() {
 		this(Canvas.createIfSupported());
@@ -69,10 +71,6 @@ public class VSignaturePadField extends SimplePanel implements RequiresResize {
 				removeStyleDependentName(CLASSNAME_FOCUS);
 			}
 		});
-	}
-
-	public SignaturePad getSignaturePad() {
-		return signaturePad;
 	}
 
 	@Override
@@ -138,6 +136,100 @@ public class VSignaturePadField extends SimplePanel implements RequiresResize {
 	protected static final native void setSignaturePadReadOnly(SignaturePad pad, boolean readOnly) /*-{
 		pad.readOnly = readOnly;
 	}-*/;
+	
+	/* DELEGATES */
+
+	public final String toDataURL() {
+		return signaturePad.toDataURL();
+	}
+
+	public final String toDataURL(String mimeType) {
+		return signaturePad.toDataURL(mimeType);
+	}
+
+	public final void fromDataURL(String dataURL) {
+		signaturePad.fromDataURL(dataURL);
+	}
+
+	public final void clear() {
+		signaturePad.clear();
+	}
+	
+	public final boolean isEmpty() {
+		return signaturePad.isEmpty();
+	}
+
+	public final Float getDotSize() {
+		return signaturePad.getDotSize();
+	}
+
+	public final void setDotSize(Float dotSize) {
+		signaturePad.setDotSize(dotSize);
+	}
+
+	public final float getMinWidth() {
+		return signaturePad.getMinWidth();
+	}
+
+	public final void setMinWidth(float minWidth) {
+		signaturePad.setMinWidth(minWidth);
+	}
+
+	public final float getMaxWidth() {
+		return signaturePad.getMaxWidth();
+	}
+
+	public final void setMaxWidth(float maxWidth) {
+		signaturePad.setMaxWidth(maxWidth);
+	}
+
+	public final String getBackgroundColor() {
+		return signaturePad.getBackgroundColor();
+	}
+
+	public final void setBackgroundColor(String backgroundColor) {
+		signaturePad.setBackgroundColor(backgroundColor);
+	}
+
+	public final String getPenColor() {
+		return signaturePad.getPenColor();
+	}
+
+	public final void setPenColor(String penColor) {
+		signaturePad.setPenColor(penColor);
+	}
+
+	public final float getVelocityFilterWeight() {
+		return signaturePad.getVelocityFilterWeight();
+	}
+
+	public final void setVelocityFilterWeight(float velocityFilterWeight) {
+		signaturePad.setVelocityFilterWeight(velocityFilterWeight);
+	}
+
+	public final BeginHandler getBeginHandler() {
+		return signaturePad.getBeginHandler();
+	}
+
+	public final void setBeginHandler(BeginHandler beginHandler) {
+		signaturePad.setBeginHandler(beginHandler);
+	}
+
+	public final EndHandler getEndHandler() {
+		return signaturePad.getEndHandler();
+	}
+
+	public final void setEndHandler(EndHandler endHandler) {
+		signaturePad.setEndHandler(endHandler);
+	}
+
+	public HandlerRegistration addBlurHandler(BlurHandler handler) {
+		return canvas.addBlurHandler(handler);
+	}
+
+	public HandlerRegistration addFocusHandler(FocusHandler handler) {
+		return canvas.addFocusHandler(handler);
+	}
 	
 	
 	

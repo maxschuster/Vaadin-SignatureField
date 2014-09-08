@@ -18,6 +18,7 @@ package eu.maxschuster.vaadin.signaturepadfield;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -90,6 +91,32 @@ public class Signature {
 	@Override
 	public String toString() {
 		return toDataURL();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(data);
+		result = prime * result
+				+ ((mimeType == null) ? 0 : mimeType.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Signature other = (Signature) obj;
+		if (!Arrays.equals(data, other.data))
+			return false;
+		if (mimeType != other.mimeType)
+			return false;
+		return true;
 	}
 	
 	

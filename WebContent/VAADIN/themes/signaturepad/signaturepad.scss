@@ -27,10 +27,15 @@
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
-@import "../valo/valo.scss";
+@import "../valo/valo";
+
+@import "signaturepadfield/signaturepadfield";
+@import "clearbutton/clearbutton";
 
 @mixin signaturepad {
-  @include valo;
-
-  
+	@include valo;
+	
+	@include signaturepad-signaturepadfield;
+	@include signaturepad-clearbutton;
+	
 }
