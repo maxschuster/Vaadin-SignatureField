@@ -50,10 +50,12 @@ public class SignaturePadField extends AbstractField<Signature> {
 			
 			@Override
 			public void setTextValue(String textValue) {
+				
 				Signature signature = null;
 				if (textValue != null) {
 					signature = new Signature(textValue);
 				}
+				
 				SignaturePadField.this.setValue(signature, true);
 			}
 		});

@@ -193,6 +193,10 @@ public class DemoUI extends UI {
 				boolean readOnly = (Boolean) event.getProperty().getValue();
 				signaturePadField.setReadOnly(readOnly);
 				mimeTypeComboBox.setReadOnly(readOnly);
+				clearButton.setEnabled(!readOnly);
+				value1Button.setEnabled(!readOnly);
+				value2Button.setEnabled(!readOnly);
+				value3Button.setEnabled(!readOnly);
 			}
 		});
 		

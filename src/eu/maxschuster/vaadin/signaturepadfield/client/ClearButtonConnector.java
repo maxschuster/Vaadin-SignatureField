@@ -3,6 +3,8 @@ package eu.maxschuster.vaadin.signaturepadfield.client;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Anchor;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
 
@@ -18,22 +20,44 @@ public class ClearButtonConnector extends AbstractExtensionConnector {
 	
 	private ClearButtonServerRpc serverRpc =
 			getRpcProxy(ClearButtonServerRpc.class);
+	
+	private Anchor closeButton;
+	
+	private boolean visible;
 
 	@Override
 	protected void extend(ServerConnector target) {
-		final VSignaturePadField field =
-                ((SignaturePadFieldConnector) target).getWidget();
+		final SignaturePadFieldConnector connector = 
+				(SignaturePadFieldConnector) target;
+		final VSignaturePadField field = connector.getWidget();
 		
 		field.addStyleName(CLASSNAME);
 		field.addStyleDependentName(CLASSNAME);
 		
-		Anchor closeButton = new Anchor();
+		connector.addStateChangeHandler("readOnly", new StateChangeHandler() {
+			
+			@Override
+			public void onStateChanged(StateChangeEvent stateChangeEvent) {
+				setVisible(!connector.getState().readOnly);
+			}
+		});
+		
+		closeButton = new Anchor();
 		field.getElement().appendChild(closeButton.getElement());
 		closeButton.setStylePrimaryName(CLASSNAME_BUTTON);
 		attachClickListener(closeButton.getElement());
-		
 	}
 	
+	protected void setVisible(boolean visible) {
+		if (this.visible != visible) {
+			this.visible = visible;
+			closeButton.setVisible(visible);
+		}
+	}
+
+
+
+
 	public void click() {
 		serverRpc.clear();
 	}
