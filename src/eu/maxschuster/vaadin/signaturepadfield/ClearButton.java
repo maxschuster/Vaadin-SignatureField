@@ -9,7 +9,7 @@ import eu.maxschuster.vaadin.signaturepadfield.shared.ClearButtonServerRpc;
 
 public class ClearButton extends AbstractExtension {
 	
-	protected ClearButton(SignaturePadField field) {
+	protected ClearButton(final SignaturePadField field) {
 		registerRpc(new ClearButtonServerRpc() {
 			
 			@Override

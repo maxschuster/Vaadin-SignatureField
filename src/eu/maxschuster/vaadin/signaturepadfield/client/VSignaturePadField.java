@@ -51,7 +51,7 @@ public class VSignaturePadField extends SimplePanel implements RequiresResize {
 		this(Canvas.createIfSupported());
 	}
 
-	public VSignaturePadField(Canvas canvas) {
+	public VSignaturePadField(final Canvas canvas) {
 		super(canvas);
 		this.canvas = canvas;
 		signaturePad = SignaturePad.create(canvas);
@@ -112,14 +112,17 @@ public class VSignaturePadField extends SimplePanel implements RequiresResize {
 	}
 	
 	protected static final native void extendSignaturePad(SignaturePad pad) /*-{
-		// proxy stroke methods to allow read only function
 		var super_strokeBegin = pad._strokeBegin,
-			super_strokeUpdate = pad._strokeUpdate;
+			super_strokeUpdate = pad._strokeUpdate,
+			canvas = pad._canvas;
+			
+		// proxy stroke methods to allow read only function
 		pad._strokeBegin = function(event) {
 			if (pad.readOnly !== true) {
+				canvas.focus(); // fix focus issue on touch devices
 				super_strokeBegin.apply(pad, [event]);
 			} else {
-				pad_mouseButtonDown = false;
+				pad._mouseButtonDown = false;
 			}
 		};
 		pad._strokeUpdate = function(event) {
