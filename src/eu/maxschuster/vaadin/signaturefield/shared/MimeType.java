@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.shared;
+package eu.maxschuster.vaadin.signaturefield.shared;
 
 public enum MimeType {
 

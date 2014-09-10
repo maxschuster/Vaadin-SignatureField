@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.demo;
+package eu.maxschuster.vaadin.signaturefield.demo;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -40,20 +40,19 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-import eu.maxschuster.vaadin.signaturepadfield.ClearButton;
-import eu.maxschuster.vaadin.signaturepadfield.Signature;
-import eu.maxschuster.vaadin.signaturepadfield.SignaturePadField;
-import eu.maxschuster.vaadin.signaturepadfield.shared.MimeType;
+import eu.maxschuster.vaadin.signaturefield.Signature;
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
+import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 @SuppressWarnings("serial")
-@Theme("signaturepad")
+@Theme("signaturefield")
 public class DemoUI extends UI {
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(
 			productionMode = false,
 			ui = DemoUI.class,
-			widgetset = "eu.maxschuster.vaadin.signaturepadfield.SignaturePadFieldWidgetset"
+			widgetset = "eu.maxschuster.vaadin.signaturefield.SignatureFieldWidgetset"
 	)
 	public static class Servlet extends VaadinServlet {}
 	
@@ -82,18 +81,16 @@ public class DemoUI extends UI {
 		buttonLayout.setSpacing(true);
 		layout.addComponent(buttonLayout);
 		
-		final SignaturePadField signaturePadField = new SignaturePadField();
-		layout.addComponent(signaturePadField);
-		signaturePadField.setPenColor(SignaturePadField.COLOR_ULTRAMARIN);
-		signaturePadField.setWidth("350px");
-		
-		ClearButton.extend(signaturePadField);
+		final SignatureField signatureField = new SignatureField();
+		layout.addComponent(signatureField);
+		signatureField.setPenColor(SignatureField.COLOR_ULTRAMARIN);
+		signatureField.setWidth("350px");
 		
 		final Button clearButton = new Button("Clear", new ClickListener() {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				signaturePadField.clear();
+				signatureField.clear();
 			}
 		});
 		buttonLayout.addComponent(clearButton);
@@ -102,7 +99,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				signaturePadField.setValue(new Signature(VALUE_1));
+				signatureField.setValue(new Signature(VALUE_1));
 			}
 		});
 		buttonLayout.addComponent(value1Button);
@@ -111,7 +108,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				signaturePadField.setValue(new Signature(VALUE_2));
+				signatureField.setValue(new Signature(VALUE_2));
 			}
 		});
 		buttonLayout.addComponent(value2Button);
@@ -120,7 +117,7 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				signaturePadField.setValue(new Signature(VALUE_3));
+				signatureField.setValue(new Signature(VALUE_3));
 			}
 		});
 		buttonLayout.addComponent(value3Button);
@@ -138,16 +135,16 @@ public class DemoUI extends UI {
 		
 		final Label emptyLabel = new Label();
 		emptyLabel.setCaption("Is Empty:");
-		emptyLabel.setValue(String.valueOf(signaturePadField.isEmpty()));
+		emptyLabel.setValue(String.valueOf(signatureField.isEmpty()));
 		resultLayout.addComponent(emptyLabel);
 		
-		signaturePadField.addValueChangeListener(new ValueChangeListener() {
+		signatureField.addValueChangeListener(new ValueChangeListener() {
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				Signature signature = (Signature) event.getProperty().getValue();
 				previewImage.setSource(signature != null ? new ExternalResource(signature.toDataURL()) : null);
-				emptyLabel.setValue(String.valueOf(signaturePadField.isEmpty()));
+				emptyLabel.setValue(String.valueOf(signatureField.isEmpty()));
 			}
 		});
 		
@@ -167,7 +164,7 @@ public class DemoUI extends UI {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				MimeType mimeType = (MimeType) event.getProperty().getValue();
-				signaturePadField.setMimeType(mimeType);
+				signatureField.setMimeType(mimeType);
 			}
 		});
 		mimeTypeComboBox.setValue(MimeType.PNG);
@@ -180,7 +177,7 @@ public class DemoUI extends UI {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				boolean immediate = (Boolean) event.getProperty().getValue();
-				signaturePadField.setImmediate(immediate);
+				signatureField.setImmediate(immediate);
 			}
 		});
 		
@@ -191,7 +188,7 @@ public class DemoUI extends UI {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				boolean readOnly = (Boolean) event.getProperty().getValue();
-				signaturePadField.setReadOnly(readOnly);
+				signatureField.setReadOnly(readOnly);
 				mimeTypeComboBox.setReadOnly(readOnly);
 				clearButton.setEnabled(!readOnly);
 				value1Button.setEnabled(!readOnly);
@@ -207,10 +204,22 @@ public class DemoUI extends UI {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				boolean required = (Boolean) event.getProperty().getValue();
-				signaturePadField.setRequired(required);
+				signatureField.setRequired(required);
 			}
 		});
 		
+		final CheckBox clearButtonEnabledButton = new CheckBox("clearButtonEnabled", false);
+		optionsLayout.addComponent(clearButtonEnabledButton);
+		clearButtonEnabledButton.addValueChangeListener(new ValueChangeListener() {
+			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				boolean clearButtonEnabled = (Boolean) event.getProperty().getValue();
+				signatureField.setClearButtonEnabled(clearButtonEnabled);
+			}
+		});
+		
+		signatureField.setValue(new Signature(VALUE_2));
 	}
 
 }

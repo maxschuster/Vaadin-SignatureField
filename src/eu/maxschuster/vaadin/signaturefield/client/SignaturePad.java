@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.client;
+package eu.maxschuster.vaadin.signaturefield.client;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.CanvasElement;
 
+/**
+ * 
+ * @author Max
+ */
 public class SignaturePad extends JavaScriptObject {
 	
 	/**
@@ -261,8 +265,8 @@ public class SignaturePad extends JavaScriptObject {
 		var self = this;
 		self._wrappedBeginHandler_ = beginHandler;
 		self.onBegin = !beginHandler ? undefined : function() {
-			beginHandler.@eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.BeginHandler::onBegin(
-				Leu/maxschuster/vaadin/signaturepadfield/client/SignaturePad;)(self);
+			beginHandler.@eu.maxschuster.vaadin.signaturefield.client.SignaturePad.BeginHandler::onBegin(
+				Leu/maxschuster/vaadin/signaturefield/client/SignaturePad;)(self);
 		};
 	}-*/;
 	
@@ -278,8 +282,8 @@ public class SignaturePad extends JavaScriptObject {
 		var self = this;
 		self._wrappedHandler_ = endHandler;
 		self.onEnd = !endHandler ? undefined : function() {
-			endHandler.@eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.EndHandler::onEnd(
-				Leu/maxschuster/vaadin/signaturepadfield/client/SignaturePad;)(self);
+			endHandler.@eu.maxschuster.vaadin.signaturefield.client.SignaturePad.EndHandler::onEnd(
+				Leu/maxschuster/vaadin/signaturefield/client/SignaturePad;)(self);
 		};
 	}-*/;
 

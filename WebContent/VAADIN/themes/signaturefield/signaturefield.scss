@@ -29,13 +29,11 @@
 
 @import "../valo/valo";
 
-@import "signaturepadfield/signaturepadfield";
-@import "clearbutton/clearbutton";
+@import "signaturefield/signaturefield";
 
-@mixin signaturepad {
+@mixin signaturefield {
 	@include valo;
 	
-	@include signaturepad-signaturepadfield;
-	@include signaturepad-clearbutton;
+	@include signaturefield-signaturefield;
 	
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield;
+package eu.maxschuster.vaadin.signaturefield;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
-import eu.maxschuster.vaadin.signaturepadfield.shared.MimeType;
+import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 public class Signature {
 	

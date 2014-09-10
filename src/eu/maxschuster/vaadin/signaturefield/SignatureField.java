@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield;
+package eu.maxschuster.vaadin.signaturefield;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.ui.AbstractField;
 
-import eu.maxschuster.vaadin.signaturepadfield.shared.MimeType;
-import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldClientRpc;
-import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldServerRpc;
-import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldState;
+import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
+import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldClientRpc;
+import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldServerRpc;
+import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
 
 /**
  * https://github.com/szimek/signature_pad
@@ -34,19 +34,19 @@ import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldState;
 @JavaScript({
 	"js/signature_pad/signature_pad.js"
 })
-public class SignaturePadField extends AbstractField<Signature> {
+public class SignatureField extends AbstractField<Signature> {
 	
 	public static final String COLOR_WHITE = "white";
 	public static final String COLOR_BLACK = "black";
 	public static final String COLOR_BLACK_TRANSPARENT = "rgba(0,0,0,0)";
 	public static final String COLOR_ULTRAMARIN = "#120a8f";
 	
-	private SignaturePadFieldClientRpc clientRpc =
-			getRpcProxy(SignaturePadFieldClientRpc.class);
+	private SignatureFieldClientRpc clientRpc =
+			getRpcProxy(SignatureFieldClientRpc.class);
 
-	public SignaturePadField() {
+	public SignatureField() {
 		super();
-		registerRpc(new SignaturePadFieldServerRpc() {
+		registerRpc(new SignatureFieldServerRpc() {
 			
 			@Override
 			public void setTextValue(String textValue) {
@@ -56,7 +56,7 @@ public class SignaturePadField extends AbstractField<Signature> {
 					signature = new Signature(textValue);
 				}
 				
-				SignaturePadField.this.setValue(signature, true);
+				SignatureField.this.setValue(signature, true);
 			}
 		});
 		
@@ -71,8 +71,8 @@ public class SignaturePadField extends AbstractField<Signature> {
 	}
 
 	@Override
-	protected SignaturePadFieldState getState() {
-		return (SignaturePadFieldState) super.getState();
+	protected SignatureFieldState getState() {
+		return (SignatureFieldState) super.getState();
 	}
 	
 	@Override
@@ -158,4 +158,12 @@ public class SignaturePadField extends AbstractField<Signature> {
 		getState().mimeType = mimeType;
 	}
 
+	public boolean isClearButtonEnabled() {
+		return getState().clearButtonEnabled;
+	}
+
+	public void setClearButtonEnabled(boolean clearButtonEnabled) {
+		getState().clearButtonEnabled = clearButtonEnabled;
+	}
+	
 }

@@ -14,63 +14,83 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.client;
+package eu.maxschuster.vaadin.signaturefield.client;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlowPanel;
 
-import eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.BeginHandler;
-import eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.EndHandler;
+import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.BeginHandler;
+import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.EndHandler;
 
-public class VSignaturePadField extends SimplePanel implements RequiresResize {
+public class SignatureFieldWidget extends FlowPanel {
 	
-	//import com.vaadin.client.ui.VTextField;
-	//import com.vaadin.client.ui.textfield.TextFieldConnector;
-	
-	/**
-     * The input node CSS classname.
-     */
-    public static final String CLASSNAME = "v-signaturepadfield";
-    
-    /**
-     * This CSS classname is added to the input node on hover.
-     */
-    public static final String CLASSNAME_FOCUS = "focus";
+    private static final String CLASSNAME = "signaturefield";
+    private static final String CLASSNAME_FOCUS = "focus";
+    private static final String CLASSNAME_CLEARBUTTON = CLASSNAME + "-clearbutton";
     
     private final SignaturePad signaturePad;
-    
     private final Canvas canvas;
+    private final Anchor clearButton;
 
-	public VSignaturePadField() {
-		this(Canvas.createIfSupported());
-	}
-
-	public VSignaturePadField(final Canvas canvas) {
-		super(canvas);
-		this.canvas = canvas;
-		signaturePad = SignaturePad.create(canvas);
-		extendSignaturePad(signaturePad);
+	public SignatureFieldWidget() {
+		
 		setStylePrimaryName(CLASSNAME);
 		
+		canvas = createCanvas();
+		add(canvas);
+		
+		clearButton = createClearButton();
+		add(clearButton);
+		
+		signaturePad = SignaturePad.create(canvas);
+		
+		extendSignaturePad(signaturePad);
+	}
+	
+	
+	
+	protected Canvas createCanvas() {
+		Canvas canvas = Canvas.createIfSupported();
 		canvas.addFocusHandler(new FocusHandler() {
 			@Override
 			public void onFocus(FocusEvent event) {
+				addStyleName(CLASSNAME_FOCUS);
 				addStyleDependentName(CLASSNAME_FOCUS);
 			}
 		});
-		
 		canvas.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
+				removeStyleName(CLASSNAME_FOCUS);
 				removeStyleDependentName(CLASSNAME_FOCUS);
 			}
 		});
+		return canvas;
+	}
+	
+	protected Anchor createClearButton() {
+		Anchor clearButton = new Anchor();
+		clearButton.setStylePrimaryName(CLASSNAME_CLEARBUTTON);
+		return clearButton;
+	}
+
+	public HandlerRegistration addClearButtonClickHandler(ClickHandler handler) {
+		return clearButton.addClickHandler(handler);
+	}
+	
+	public boolean isClearButtonVisible() {
+		return clearButton.isVisible();
+	}
+	
+	public void setClearButtonVisible(boolean clearButtonVisible) {
+		clearButton.setVisible(clearButtonVisible);
 	}
 
 	@Override
@@ -96,11 +116,6 @@ public class VSignaturePadField extends SimplePanel implements RequiresResize {
 		if (oldHeight != newHeight) {
 			canvas.setCoordinateSpaceHeight(newHeight);
 		}
-	}
-
-	@Override
-	public void onResize() {
-		Console.log("OnResize");
 	}
 
 	public boolean isReadOnly() {

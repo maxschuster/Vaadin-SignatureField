@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.shared;
+package eu.maxschuster.vaadin.signaturefield.shared;
 
 import com.vaadin.shared.AbstractFieldState;
 
-public class SignaturePadFieldState extends AbstractFieldState {
+public class SignatureFieldState extends AbstractFieldState {
 
 	/**
 	 * (float or function) Radius of a single dot.
@@ -60,5 +60,10 @@ public class SignaturePadFieldState extends AbstractFieldState {
 	 * MIME-Type used to create dataURLs
 	 */
 	public MimeType mimeType = MimeType.PNG;
+	
+	/**
+	 * Add a clear button to the signaturefield
+	 */
+	public boolean clearButtonEnabled = false;
 	
 }

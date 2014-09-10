@@ -14,34 +14,36 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.client;
+package eu.maxschuster.vaadin.signaturefield.client;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.shared.ui.Connect;
 
-import eu.maxschuster.vaadin.signaturepadfield.SignaturePadField;
-import eu.maxschuster.vaadin.signaturepadfield.client.SignaturePad.EndHandler;
-import eu.maxschuster.vaadin.signaturepadfield.shared.MimeType;
-import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldClientRpc;
-import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldServerRpc;
-import eu.maxschuster.vaadin.signaturepadfield.shared.SignaturePadFieldState;
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
+import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.EndHandler;
+import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
+import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldClientRpc;
+import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldServerRpc;
+import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
 
-@Connect(SignaturePadField.class)
-public class SignaturePadFieldConnector extends AbstractFieldConnector {
+@Connect(SignatureField.class)
+public class SignatureFieldConnector extends AbstractFieldConnector {
 	
 	private String value;
 	
 	private boolean changed;
 	
-	private SignaturePadFieldServerRpc serverRpc = 
-			getRpcProxy(SignaturePadFieldServerRpc.class);
+	private SignatureFieldServerRpc serverRpc = 
+			getRpcProxy(SignatureFieldServerRpc.class);
 	
-	public SignaturePadFieldConnector() {
-		registerRpc(SignaturePadFieldClientRpc.class,
-				new SignaturePadFieldClientRpc() {
+	public SignatureFieldConnector() {
+		registerRpc(SignatureFieldClientRpc.class,
+				new SignatureFieldClientRpc() {
 
 			@Override
 			public void clear() {
@@ -50,7 +52,7 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 
 			@Override
 			public void fromDataURL(MimeType mimeType, String dataURL) {
-				VSignaturePadField field = getWidget();
+				SignatureFieldWidget field = getWidget();
 				field.fromDataURL(dataURL);
 			}
 		});
@@ -59,9 +61,8 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 	@Override
 	protected void init() {
 		super.init();
-		
-		VSignaturePadField field = getWidget();
-		
+		SignatureFieldWidget field = getWidget();
+		field.setClearButtonVisible(getState().clearButtonEnabled);
 		field.setEndHandler(new EndHandler() {
 			
 			@Override
@@ -71,7 +72,6 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 				changeValue(newTextValue, null);
 			}
 		});
-		
 		field.addBlurHandler(new BlurHandler() {
 			
 			@Override
@@ -81,10 +81,18 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 				}
 			}
 		});
+		field.addClearButtonClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				changeValue(null, true);
+				getWidget().clear();
+			}
+		});
 	}
 	
 	protected String getDataURL(String mimeType) {
-		VSignaturePadField field = getWidget();
+		SignatureFieldWidget field = getWidget();
 		return field.isEmpty() ? null : field.toDataURL(mimeType);
 	}
 	
@@ -124,8 +132,8 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 	@Override
 	public void onStateChanged(StateChangeEvent event) {
 		super.onStateChanged(event);
-		SignaturePadFieldState state = getState();
-		VSignaturePadField field = getWidget();
+		SignatureFieldState state = getState();
+		SignatureFieldWidget field = getWidget();
 		
 		field.setDotSize(state.dotSize);
 		field.setMaxWidth(state.maxWidth);
@@ -133,7 +141,12 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 		field.setPenColor(state.penColor);
 		field.setVelocityFilterWeight(state.velocityFilterWeight);
 		
-		getWidget().setReadOnly(state.readOnly);
+		field.setClearButtonVisible(state.clearButtonEnabled);
+		
+		field.setReadOnly(state.readOnly);
+		if (state.readOnly) {
+			field.setClearButtonVisible(false);
+		}
 		
 		if (event.hasPropertyChanged("mimeType")) {
 			String mimeType = getMimeType().getMimeType();
@@ -153,13 +166,13 @@ public class SignaturePadFieldConnector extends AbstractFieldConnector {
 	}
 
 	@Override
-	public SignaturePadFieldState getState() {
-		return (SignaturePadFieldState) super.getState();
+	public SignatureFieldState getState() {
+		return (SignatureFieldState) super.getState();
 	}
 
 	@Override
-	public VSignaturePadField getWidget() {
-		return (VSignaturePadField) super.getWidget();
+	public SignatureFieldWidget getWidget() {
+		return (SignatureFieldWidget) super.getWidget();
 	}
 	
 }

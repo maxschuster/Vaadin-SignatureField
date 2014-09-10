@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.shared;
+package eu.maxschuster.vaadin.signaturefield.client;
 
-import com.vaadin.shared.communication.ClientRpc;
+import com.google.gwt.core.client.JavaScriptObject;
 
-public interface SignaturePadFieldClientRpc extends ClientRpc {
+public class Console extends JavaScriptObject {
 	
-	public void clear();
+	protected Console() {}
 	
-	public void fromDataURL(MimeType mimeType, String dataURL);
-
+	public static final native boolean isSupported() /*-{
+		return typeof console === "object";
+	}-*/;
+	
+	public static final native void log(Object...objects) /*-{
+		if (typeof console === "object") {
+			console.log.apply(console, objects);
+		}
+	}-*/;
+	
 }

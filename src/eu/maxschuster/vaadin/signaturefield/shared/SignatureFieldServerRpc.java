@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturepadfield.shared;
+package eu.maxschuster.vaadin.signaturefield.shared;
 
 import com.vaadin.shared.communication.ServerRpc;
 
-public interface SignaturePadFieldServerRpc extends ServerRpc {
+public interface SignatureFieldServerRpc extends ServerRpc {
 
 	public void setTextValue(String textValue);
 	
