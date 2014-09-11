@@ -54,8 +54,6 @@ public class SignatureFieldWidget extends FlowPanel {
 		extendSignaturePad(signaturePad);
 	}
 	
-	
-	
 	protected Canvas createCanvas() {
 		Canvas canvas = Canvas.createIfSupported();
 		canvas.addFocusHandler(new FocusHandler() {

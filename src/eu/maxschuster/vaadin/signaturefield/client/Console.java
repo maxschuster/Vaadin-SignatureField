@@ -32,4 +32,10 @@ public class Console extends JavaScriptObject {
 		}
 	}-*/;
 	
+	public static final native void error(Object...objects) /*-{
+		if (typeof console === "object") {
+			console.error.apply(console, objects);
+		}
+	}-*/;
+	
 }

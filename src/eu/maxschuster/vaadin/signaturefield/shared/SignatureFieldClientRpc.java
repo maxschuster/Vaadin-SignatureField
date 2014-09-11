@@ -22,6 +22,6 @@ public interface SignatureFieldClientRpc extends ClientRpc {
 	
 	public void clear();
 	
-	public void fromDataURL(MimeType mimeType, String dataURL);
+	public void fromDataURL(String dataURL);
 
 }

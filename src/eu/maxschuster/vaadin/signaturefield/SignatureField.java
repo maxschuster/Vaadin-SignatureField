@@ -17,8 +17,6 @@
 package eu.maxschuster.vaadin.signaturefield;
 
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.ui.AbstractField;
 
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
@@ -34,7 +32,7 @@ import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
 @JavaScript({
 	"js/signature_pad/signature_pad.js"
 })
-public class SignatureField extends AbstractField<Signature> {
+public class SignatureField extends AbstractField<String> {
 	
 	public static final String COLOR_WHITE = "white";
 	public static final String COLOR_BLACK = "black";
@@ -50,13 +48,7 @@ public class SignatureField extends AbstractField<Signature> {
 			
 			@Override
 			public void setTextValue(String textValue) {
-				
-				Signature signature = null;
-				if (textValue != null) {
-					signature = new Signature(textValue);
-				}
-				
-				SignatureField.this.setValue(signature, true);
+				setValue(textValue, true);
 			}
 		});
 		
@@ -66,8 +58,8 @@ public class SignatureField extends AbstractField<Signature> {
 	}
 
 	@Override
-	public Class<? extends Signature> getType() {
-		return Signature.class;
+	public Class<? extends String> getType() {
+		return String.class;
 	}
 
 	@Override
@@ -82,19 +74,14 @@ public class SignatureField extends AbstractField<Signature> {
 	}
 
 	@Override
-	protected void setValue(Signature newFieldValue, boolean repaintIsNotNeeded)
-			throws ReadOnlyException, ConversionException,
-			InvalidValueException {
-		Signature oldInternalValue = getInternalValue();
-		super.setValue(newFieldValue, repaintIsNotNeeded);
-		Signature newInternalValue = getInternalValue();
-		if (!repaintIsNotNeeded) {
-			if (newInternalValue != null && !newInternalValue.equals(oldInternalValue)) {
-				clientRpc.fromDataURL(
-						newInternalValue.getMimeType(), newInternalValue.toDataURL());
-			} else if (newInternalValue == null) {
-				clientRpc.clear();
-			}
+	protected void setInternalValue(String newValue) {
+		String oldInternalValue = getInternalValue();
+		super.setInternalValue(newValue);
+		// Push changes to the client
+		if (newValue != null && !newValue.equals(oldInternalValue)) {
+			clientRpc.fromDataURL(newValue);
+		} else if (newValue == null) {
+			clientRpc.clear();
 		}
 	}
 

@@ -14,41 +14,56 @@
  * limitations under the License.
  */
 
-package eu.maxschuster.vaadin.signaturefield;
+package eu.maxschuster.vaadin.signaturefield.dataurl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
-public class Signature {
+/**
+ * !! Experimental !!
+ * 
+ * Parses simple DataURLs of canvas elements
+ * 
+ * TODO Write real implementation of RFC 2397 (http://shadow2531.com/opera/testcases/datauri/data_uri_rules.html)
+ * 
+ * @author Max
+ * 
+ */
+public class DataURL {
 	
 	private final MimeType mimeType;
 	
 	private final byte[] data;
 	
-	public Signature(String dataURL) {
+	public DataURL(String dataURL) throws MalformedURLException {
 		super();
 		mimeType = findMimeType(dataURL);
 		data = findData(dataURL);
 	}
 	
-	public Signature(MimeType mimeType, byte[] data) {
+	public DataURL(MimeType mimeType, byte[] data) {
 		super();
 		this.mimeType = mimeType;
 		this.data = data;
 	}
 
-	protected byte[] findData(String dataURL) throws RuntimeException {
+	protected byte[] findData(String dataURL) throws MalformedURLException {
 		int commaIndex = dataURL.indexOf(',');
 		if (commaIndex == -1) {
-			throw new RuntimeException("data not found!");
+			throw new MalformedURLException();
 		}
+		try {
 		String base64String = dataURL.substring(commaIndex);
 		return decodeBase64(base64String);
+		} catch (IllegalArgumentException e) {
+			throw new MalformedURLException();
+		}
 	}
 	
 	protected MimeType findMimeType(String dataURL) {
@@ -79,7 +94,7 @@ public class Signature {
 		return data;
 	}
 
-	public String toDataURL() {
+	public String toDataURLString() {
 		return "data:" + mimeType.getMimeType() + ";base64," + encodeBase64(data);
 	}
 	
@@ -90,7 +105,7 @@ public class Signature {
 
 	@Override
 	public String toString() {
-		return toDataURL();
+		return toDataURLString();
 	}
 
 	@Override
@@ -111,7 +126,7 @@ public class Signature {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Signature other = (Signature) obj;
+		DataURL other = (DataURL) obj;
 		if (!Arrays.equals(data, other.data))
 			return false;
 		if (mimeType != other.mimeType)

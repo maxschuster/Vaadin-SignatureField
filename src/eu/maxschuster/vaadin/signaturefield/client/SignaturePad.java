@@ -96,7 +96,7 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Returns signature image as data URL
-	 * @return Signature image as data URL
+	 * @return DataURL image as data URL
 	 */
 	public final native String toDataURL() /*-{
 		return this.toDataURL();
@@ -108,7 +108,7 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Draws signature image from data URL
-	 * @param dataURL Signature image from data URL
+	 * @param dataURL DataURL image from data URL
 	 */
 	public final native void fromDataURL(String dataURL) /*-{
 		this.fromDataURL(dataURL);

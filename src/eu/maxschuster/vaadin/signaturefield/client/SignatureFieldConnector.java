@@ -51,7 +51,7 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 			}
 
 			@Override
-			public void fromDataURL(MimeType mimeType, String dataURL) {
+			public void fromDataURL(String dataURL) {
 				SignatureFieldWidget field = getWidget();
 				field.fromDataURL(dataURL);
 			}
@@ -148,7 +148,7 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 			field.setClearButtonVisible(false);
 		}
 		
-		if (event.hasPropertyChanged("mimeType")) {
+		if (event.hasPropertyChanged("mimeType") && !getWidget().isEmpty()) {
 			String mimeType = getMimeType().getMimeType();
 			String newValue = getDataURL(mimeType);
 			changeValue(newValue, true);
