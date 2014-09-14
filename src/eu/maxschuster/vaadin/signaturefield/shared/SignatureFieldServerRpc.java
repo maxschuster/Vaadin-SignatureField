@@ -18,6 +18,13 @@ package eu.maxschuster.vaadin.signaturefield.shared;
 
 import com.vaadin.shared.communication.ServerRpc;
 
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
+
+/**
+ * {@link ServerRpc} of {@link SignatureField}
+ * 
+ * @author Max Schuster <dev@maxschuster.eu>
+ */
 public interface SignatureFieldServerRpc extends ServerRpc {
 
 	public void setTextValue(String textValue);

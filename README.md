@@ -1,0 +1,63 @@
+SignatureField
+==============
+
+A Vaadin Field (AbstractField<Stirng>) to capture signatures.
+Its value is the dataURL from the html canvas as simple String
+It uses szimek's [SignaturePad](https://github.com/szimek/signature_pad).
+
+# Warning
+This Add-on is still under development. The API may change.
+
+# Usage
+## Simple
+``` java
+FormLayout layout = new FormLayout();
+
+SignatureField signatureField = new SignatureField();
+signatureField.setWidth("350px");
+signatureField.setHeight("150px");
+
+layout.addComponent(signatureField);
+
+signatureField.addValueChangeListener(new ValueChangeListener() {
+	@Override
+	public void valueChange(ValueChangeEvent event) {
+		String signature = (String) event.getProperty().getValue();
+		// do something with the string
+	}
+});
+```
+
+## Using DataURL
+``` java
+
+ObjectProperty<DataURL> dataUrlProperty =
+	new ObjectProperty<DataURL>(null, DataURL.class);
+
+FormLayout layout = new FormLayout();
+
+SignatureField signatureField = new SignatureField();
+signatureField.setWidth("350px");
+signatureField.setHeight("150px");
+signatureField.setConverter(new StringToDataURLConverter());
+signatureField.setPropertyDataSource(dataUrlProperty);
+
+layout.addComponent(signatureField);
+
+dataUrlProperty.addValueChangeListener(new ValueChangeListener() {
+	@Override
+	public void valueChange(ValueChangeEvent event) {
+		final DataURL signature = (DataURL) event.getProperty().getValue();
+		// do something with the DataURL
+	}	
+});
+```
+
+# TODOs
+* Improve resize handling
+* Test DataURL
+* Test field
+
+# Licence
+
+Apache 2.0

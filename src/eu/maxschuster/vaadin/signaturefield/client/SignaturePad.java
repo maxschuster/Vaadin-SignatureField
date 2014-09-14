@@ -20,20 +20,29 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.CanvasElement;
 
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
+
 /**
+ * Interface to the native javascript object
+ * <code>SignaturePad</code> by <b>Szymon Nowak (szimek)</b>
+ * The javascript file is loaded by the
+ * {@link SignatureField} component
  * 
- * @author Max
+ * @author Max Schuster <dev@schuster.eu>
+ * @see https://github.com/szimek/signature_pad
  */
 public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Callback when stroke begin.
-	 * @author Max
+	 * 
+	 * @author Max Schuster <dev@schuster.eu>
 	 */
 	public interface BeginHandler {
 		
 		/**
 		 * Callback when stroke begin.
+		 * 
 		 * @param signaturePad
 		 */
 		public void onBegin(SignaturePad signaturePad);
@@ -42,12 +51,14 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Callback when stroke end.
-	 * @author Max
+	 * 
+	 * @author Max Schuster <dev@schuster.eu>
 	 */
 	public interface EndHandler {
 		
 		/**
 		 * Callback when stroke end.
+		 * 
 		 * @param signaturePad
 		 */
 		public void onEnd(SignaturePad signaturePad);
@@ -96,7 +107,8 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Returns signature image as data URL
-	 * @return DataURL image as data URL
+	 * 
+	 * @return DataURL_ image as data URL
 	 */
 	public final native String toDataURL() /*-{
 		return this.toDataURL();
@@ -108,7 +120,8 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Draws signature image from data URL
-	 * @param dataURL DataURL image from data URL
+	 * 
+	 * @param dataURL DataURL_ image from data URL
 	 */
 	public final native void fromDataURL(String dataURL) /*-{
 		this.fromDataURL(dataURL);
@@ -123,6 +136,7 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Returns true if canvas is empty, otherwise returns false
+	 * 
 	 * @return True if canvas is empty, otherwise returns false
 	 */
 	public final native boolean isEmpty() /*-{
@@ -133,6 +147,7 @@ public class SignaturePad extends JavaScriptObject {
 
 	/**
 	 * Gets the radius of a single dot.
+	 * 
 	 * @return Radius of a single dot.
 	 */
 	public final native Float getDotSize() /*-{
@@ -141,6 +156,7 @@ public class SignaturePad extends JavaScriptObject {
 
 	/**
 	 * Sets the radius of a single dot.
+	 * 
 	 * @param dotSize Radius of a single dot.
 	 */
 	public final native void setDotSize(Float dotSize) /*-{
@@ -156,6 +172,7 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Gets the minimum width of a line. Defaults to 0.5.
+	 * 
 	 * @return Minimum width of a line
 	 */
 	public final native float getMinWidth() /*-{
@@ -164,6 +181,7 @@ public class SignaturePad extends JavaScriptObject {
 
 	/**
 	 * Sets the minimum width of a line. Defaults to 0.5.
+	 * 
 	 * @param minWidth Minimum width of a line
 	 */
 	public final native void setMinWidth(float minWidth) /*-{
@@ -172,6 +190,7 @@ public class SignaturePad extends JavaScriptObject {
 
 	/**
 	 * Gets the maximum width of a line. Defaults to 2.5.
+	 * 
 	 * @return Maximum width of a line
 	 */
 	public final native float getMaxWidth() /*-{
@@ -180,6 +199,7 @@ public class SignaturePad extends JavaScriptObject {
 
 	/**
 	 * Sets the maximum width of a line. Defaults to 2.5.
+	 * 
 	 * @param maxWidth Maximum width of a line
 	 */
 	public final native void setMaxWidth(float maxWidth) /*-{
@@ -193,6 +213,7 @@ public class SignaturePad extends JavaScriptObject {
 	 * (transparent black). Use a non-transparent color
 	 * e.g. "rgb(255,255,255)" (opaque white) if you'd
 	 * like to save signatures as JPEG images.
+	 * 
 	 * @return Color used to clear the background
 	 */
 	public final native String getBackgroundColor() /*-{
@@ -206,6 +227,7 @@ public class SignaturePad extends JavaScriptObject {
 	 * (transparent black). Use a non-transparent
 	 * color e.g. "rgb(255,255,255)" (opaque white)
 	 * if you'd like to save signatures as JPEG images.
+	 * 
 	 * @param backgroundColor Color used to clear
 	 * the background
 	 */
@@ -217,6 +239,7 @@ public class SignaturePad extends JavaScriptObject {
 	 * Gets the color used to draw the lines. Can be
 	 * any color format accepted by context.fillStyle.
 	 * Defaults to "black".
+	 * 
 	 * @return Color used to draw the lines
 	 */
 	public final native String getPenColor() /*-{
@@ -227,6 +250,7 @@ public class SignaturePad extends JavaScriptObject {
 	 * Sets the color used to draw the lines. Can be
 	 * any color format accepted by context.fillStyle.
 	 * Defaults to "black".
+	 * 
 	 * @param penColor Color used to draw the lines
 	 */
 	public final native void setPenColor(String penColor) /*-{
@@ -236,6 +260,7 @@ public class SignaturePad extends JavaScriptObject {
 	/**
 	 * Gets the weight used to modify new velocity
 	 * based on the previous velocity. Defaults to 0.7.
+	 * 
 	 * @return Weight used to modify new velocity
 	 * based on the previous velocity
 	 */
@@ -246,6 +271,7 @@ public class SignaturePad extends JavaScriptObject {
 	/**
 	 * Sets the weight used to modify new velocity
 	 * based on the previous velocity. Defaults to 0.7.
+	 * 
 	 * @param velocityFilterWeight Weight used to
 	 * modify new velocity based on the previous velocity
 	 */
@@ -259,6 +285,7 @@ public class SignaturePad extends JavaScriptObject {
 	
 	/**
 	 * Sets the callback when stroke begin
+	 * 
 	 * @param onBegin Callback when stroke begin
 	 */
 	public final native void setBeginHandler(BeginHandler beginHandler) /*-{
@@ -276,6 +303,7 @@ public class SignaturePad extends JavaScriptObject {
 
 	/**
 	 * Sets the callback when stroke end.
+	 * 
 	 * @param onEnd Callback when stroke end.
 	 */
 	public final native void setEndHandler(EndHandler endHandler) /*-{

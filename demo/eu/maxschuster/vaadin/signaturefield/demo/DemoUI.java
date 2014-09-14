@@ -16,8 +16,13 @@
 
 package eu.maxschuster.vaadin.signaturefield.demo;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -25,6 +30,8 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.MarginInfo;
@@ -38,16 +45,18 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+import eu.maxschuster.vaadin.signaturefield.DataURL;
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
-import eu.maxschuster.vaadin.signaturefield.dataurl.DataURL;
-import eu.maxschuster.vaadin.signaturefield.dataurl.converter.StringToDataURLConverter;
+import eu.maxschuster.vaadin.signaturefield.converter.StringToDataURLConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 @SuppressWarnings("serial")
 @Theme("signaturefield")
+@PreserveOnRefresh
 public class DemoUI extends UI {
 
 	@WebServlet(value = "/*", asyncSupported = true)
@@ -75,6 +84,7 @@ public class DemoUI extends UI {
 		final VerticalLayout layout = new VerticalLayout();
 		layout.setMargin(true);
 		layout.setSpacing(true);
+		layout.setWidth("100%");
 		setContent(layout);
 		
 		final BeanItemContainer<MimeType> mimeTypeContainer =
@@ -84,12 +94,13 @@ public class DemoUI extends UI {
 		
 		final HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.setSpacing(true);
+		buttonLayout.setWidth("100%");
 		layout.addComponent(buttonLayout);
 		
 		final SignatureField signatureField = new SignatureField();
 		layout.addComponent(signatureField);
 		signatureField.setPenColor(SignatureField.COLOR_ULTRAMARIN);
-		signatureField.setWidth("350px");
+		signatureField.setWidth("100%");
 		signatureField.setConverter(new StringToDataURLConverter());
 		signatureField.setPropertyDataSource(dataUrlProperty);
 		
@@ -143,7 +154,7 @@ public class DemoUI extends UI {
 		buttonLayout.addComponent(value3Button);
 		
 		final Panel resultPanel = new Panel("Results:");
-		resultPanel.setSizeUndefined();
+		resultPanel.setWidth("100%");
 		layout.addComponent(resultPanel);
 		
 		final FormLayout resultLayout = new FormLayout();
@@ -151,10 +162,21 @@ public class DemoUI extends UI {
 		resultPanel.setContent(resultLayout);
 		
 		final Image stringPreviewImage = new Image("String preview image:");
+		stringPreviewImage.setWidth("500px");
 		resultLayout.addComponent(stringPreviewImage);
 		
 		final Image dataUrlPreviewImage = new Image("DataURL preview image:");
+		dataUrlPreviewImage.setWidth("500px");
 		resultLayout.addComponent(dataUrlPreviewImage);
+		
+		final Image streamResourcePreviewImage = new Image("StreamResource preview image");
+		streamResourcePreviewImage.setWidth("500px");
+		resultLayout.addComponent(streamResourcePreviewImage);
+		
+		final TextArea textArea = new TextArea("DataURL:");
+		textArea.setWidth("100%");
+		textArea.setHeight("300px");
+		resultLayout.addComponent(textArea);
 		
 		final Label emptyLabel = new Label();
 		emptyLabel.setCaption("Is Empty:");
@@ -167,6 +189,7 @@ public class DemoUI extends UI {
 			public void valueChange(ValueChangeEvent event) {
 				String signature = (String) event.getProperty().getValue();
 				stringPreviewImage.setSource(signature != null ? new ExternalResource(signature) : null);
+				textArea.setValue(signature);
 				emptyLabel.setValue(String.valueOf(signatureField.isEmpty()));
 			}
 		});
@@ -174,13 +197,32 @@ public class DemoUI extends UI {
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				DataURL signature = (DataURL) event.getProperty().getValue();
-				dataUrlPreviewImage.setSource(signature != null ? new ExternalResource(signature.toDataURLString()) : null);
+				try {
+					final DataURL signature = (DataURL) event.getProperty().getValue();
+					dataUrlPreviewImage.setSource(signature != null ? new ExternalResource(signature.toDataURLString()) : null);
+					StreamResource streamResource = null;
+					if (signature != null) {
+						StreamSource streamSource = new StreamSource() {
+							
+							@Override
+							public InputStream getStream() {
+								return new ByteArrayInputStream(signature.getData());
+							}
+						};
+						streamResource = new StreamResource(streamSource, "signature.png");
+						streamResource.setMIMEType(signature.getMimeType());
+						streamResource.setCacheTime(0);
+					}
+					streamResourcePreviewImage.setSource(streamResource);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
 		final Panel optionsPanel = new Panel("Options:");
-		optionsPanel.setSizeUndefined();
+		optionsPanel.setWidth("100%");
 		layout.addComponent(optionsPanel);
 		
 		final FormLayout optionsLayout = new FormLayout();

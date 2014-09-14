@@ -18,6 +18,13 @@ package eu.maxschuster.vaadin.signaturefield.shared;
 
 import com.vaadin.shared.AbstractFieldState;
 
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
+
+/**
+ * Shared state for {@link SignatureField}
+ * 
+ * @author Max Schuster <dev@maxschuster.eu>
+ */
 public class SignatureFieldState extends AbstractFieldState {
 
 	/**
@@ -62,7 +69,7 @@ public class SignatureFieldState extends AbstractFieldState {
 	public MimeType mimeType = MimeType.PNG;
 	
 	/**
-	 * Add a clear button to the signaturefield
+	 * Show a clear button in the signaturefield
 	 */
 	public boolean clearButtonEnabled = false;
 	

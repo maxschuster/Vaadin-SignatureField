@@ -17,6 +17,9 @@
 package eu.maxschuster.vaadin.signaturefield.client;
 
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -25,10 +28,17 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
 
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
 import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.BeginHandler;
 import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.EndHandler;
 
+/**
+ * Widget of the {@link SignatureField}
+ * 
+ * @author Max Schuster <dev@maxschuster.eu>
+ */
 public class SignatureFieldWidget extends FlowPanel {
 	
     private static final String CLASSNAME = "signaturefield";
@@ -38,6 +48,21 @@ public class SignatureFieldWidget extends FlowPanel {
     private final SignaturePad signaturePad;
     private final Canvas canvas;
     private final Anchor clearButton;
+    
+    private Image resizeTmpImage = new Image();
+    
+    private final RepeatingCommand resizeCommand =
+    		new RepeatingCommand() {
+		
+		@Override
+		public boolean execute() {
+			updateCanvasSize();
+			resizingDebounce = false;
+			return false;
+		}
+	};
+    
+    private boolean resizingDebounce = false;
 
 	public SignatureFieldWidget() {
 		
@@ -90,29 +115,29 @@ public class SignatureFieldWidget extends FlowPanel {
 	public void setClearButtonVisible(boolean clearButtonVisible) {
 		clearButton.setVisible(clearButtonVisible);
 	}
-
-	@Override
-	public void setHeight(String height) {
-		super.setHeight(height);
-		updateCanvasSize();
-	}
-
-	@Override
-	public void setWidth(String width) {
-		super.setWidth(width);
-		updateCanvasSize();
-	}
 	
 	public void updateCanvasSize() {
 		int oldWidth = canvas.getCoordinateSpaceWidth();
 		int newWidth = getElement().getClientWidth();
 		int oldHeight = canvas.getCoordinateSpaceHeight();
 		int newHeight = getElement().getClientHeight();
-		if (oldWidth != newWidth) {
+		boolean empty = signaturePad.isEmpty();
+		if (oldWidth != newWidth || oldHeight != newHeight) {
+			if (!empty) {
+				resizeTmpImage.setUrl(canvas.toDataUrl("image/png"));
+			}
 			canvas.setCoordinateSpaceWidth(newWidth);
-		}
-		if (oldHeight != newHeight) {
 			canvas.setCoordinateSpaceHeight(newHeight);
+			if (!empty) {
+				final ImageElement face = ImageElement.as(resizeTmpImage.getElement());
+				canvas.getContext2d().drawImage(face, 0, 0);
+			}
+		}
+	}
+	
+	public void updateCanvasSizeDebounced() {
+		if (!resizingDebounce) {
+			Scheduler.get().scheduleFixedDelay(resizeCommand, 500);
 		}
 	}
 

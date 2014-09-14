@@ -18,23 +18,29 @@ package eu.maxschuster.vaadin.signaturefield.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class Console extends JavaScriptObject {
+/**
+ * Interface to window.console.
+ * For debug purposes only.
+ * 
+ * @author Max Schuster <dev@maxschuster.eu>
+ */
+class Console extends JavaScriptObject {
 	
 	protected Console() {}
 	
 	public static final native boolean isSupported() /*-{
-		return typeof console === "object";
+		return typeof $wnd.console === "object";
 	}-*/;
 	
 	public static final native void log(Object...objects) /*-{
-		if (typeof console === "object") {
-			console.log.apply(console, objects);
+		if (typeof $wnd.console === "object") {
+			$wnd.console.log.apply(console, objects);
 		}
 	}-*/;
 	
 	public static final native void error(Object...objects) /*-{
-		if (typeof console === "object") {
-			console.error.apply(console, objects);
+		if (typeof $wnd.console === "object") {
+			$wnd.console.error.apply(console, objects);
 		}
 	}-*/;
 	

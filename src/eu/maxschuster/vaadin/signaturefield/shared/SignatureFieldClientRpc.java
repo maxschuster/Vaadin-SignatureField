@@ -18,6 +18,13 @@ package eu.maxschuster.vaadin.signaturefield.shared;
 
 import com.vaadin.shared.communication.ClientRpc;
 
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
+
+/**
+ * {@link ClientRpc} of {@link SignatureField}
+ * 
+ * @author Max Schuster <dev@maxschuster.eu>
+ */
 public interface SignatureFieldClientRpc extends ClientRpc {
 	
 	public void clear();

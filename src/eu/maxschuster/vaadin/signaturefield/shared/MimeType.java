@@ -16,6 +16,13 @@
 
 package eu.maxschuster.vaadin.signaturefield.shared;
 
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
+
+/**
+ * Predefined MIME-Types for the {@link SignatureField}
+ * 
+ * @author Max Schuster <dev@maxschuster.eu>
+ */
 public enum MimeType {
 
 	PNG("image/png"),
@@ -27,11 +34,26 @@ public enum MimeType {
 		this.mimeType = mimeType;
 	}
 
+	/**
+	 * @return MIME-Type as {@link String}
+	 */
 	public String getMimeType() {
 		return mimeType;
 	}
 	
-	public static MimeType valueOfMimeType(String mimeType) {
+	/**
+	 * Searches the matching {@link MimeType} instance for
+	 * the given MIME-Type {@link String}
+	 * 
+	 * @param mimeType MIME-Type as {@link String}
+	 * @return Matching {@link MimeType}
+	 * @throws NullPointerException
+	 * If mimeType is <code>null</code>
+	 * @throws IllegalArgumentException
+	 * If no matching {@link MimeType} was found
+	 */
+	public static MimeType valueOfMimeType(String mimeType) throws
+			NullPointerException, IllegalArgumentException {
 		if (mimeType == null) {
 			throw new NullPointerException("mimeType must not be null!");
 		}

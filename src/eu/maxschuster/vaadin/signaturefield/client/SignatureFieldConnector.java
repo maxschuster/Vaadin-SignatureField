@@ -22,6 +22,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.Connect;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
@@ -31,8 +33,22 @@ import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldClientRpc;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldServerRpc;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
 
+/**
+ * Connector of the {@link SignatureField}
+ * 
+ * @author Max Schuster <dev@maxschuster.eu>
+ */
 @Connect(SignatureField.class)
 public class SignatureFieldConnector extends AbstractFieldConnector {
+	
+	private final ElementResizeListener elementResizeListener =
+			new ElementResizeListener() {
+				
+				@Override
+				public void onElementResize(ElementResizeEvent e) {
+					getWidget().updateCanvasSizeDebounced();
+				}
+			};
 	
 	private String value;
 	
@@ -42,6 +58,7 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 			getRpcProxy(SignatureFieldServerRpc.class);
 	
 	public SignatureFieldConnector() {
+		
 		registerRpc(SignatureFieldClientRpc.class,
 				new SignatureFieldClientRpc() {
 
@@ -89,6 +106,9 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 				getWidget().clear();
 			}
 		});
+		
+		getLayoutManager().addElementResizeListener(
+				getWidget().getElement(), elementResizeListener);
 	}
 	
 	protected String getDataURL(String mimeType) {
@@ -173,6 +193,12 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 	@Override
 	public SignatureFieldWidget getWidget() {
 		return (SignatureFieldWidget) super.getWidget();
+	}
+
+	@Override
+	protected void updateComponentSize(String newWidth, String newHeight) {
+		super.updateComponentSize(newWidth, newHeight);
+		getWidget().updateCanvasSize();
 	}
 	
 }
