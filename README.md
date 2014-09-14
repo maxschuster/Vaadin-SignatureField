@@ -5,11 +5,11 @@ A Vaadin Field (AbstractField<Stirng>) to capture signatures.
 Its value is the dataURL from the html canvas as simple String
 It uses szimek's [SignaturePad](https://github.com/szimek/signature_pad).
 
-# Warning
+## Warning
 This Add-on is still under development. The API may change.
 
-# Usage
-## Simple
+## Usage
+### Simple
 ``` java
 FormLayout layout = new FormLayout();
 
@@ -28,7 +28,7 @@ signatureField.addValueChangeListener(new ValueChangeListener() {
 });
 ```
 
-## Using DataURL
+### Using DataURL
 ``` java
 
 ObjectProperty<DataURL> dataUrlProperty =
@@ -48,16 +48,18 @@ dataUrlProperty.addValueChangeListener(new ValueChangeListener() {
 	@Override
 	public void valueChange(ValueChangeEvent event) {
 		final DataURL signature = (DataURL) event.getProperty().getValue();
-		// do something with the DataURL
+		String mimeType = signature.getAppliedMimeType();
+		byte[] data = signature.getData();
+		// do something with the data
 	}	
 });
 ```
 
-# TODOs
+## TODOs
 * Improve resize handling
 * Test DataURL
 * Test field
 
-# Licence
+## Licence
 
 Apache 2.0
