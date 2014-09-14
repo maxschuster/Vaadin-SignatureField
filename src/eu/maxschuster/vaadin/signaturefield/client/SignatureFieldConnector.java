@@ -27,6 +27,7 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.Connect;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
+import eu.maxschuster.vaadin.signaturefield.client.SignatureFieldWidget.UpdateCanvasSizeHandler;
 import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.EndHandler;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldClientRpc;
@@ -79,6 +80,15 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 	protected void init() {
 		super.init();
 		SignatureFieldWidget field = getWidget();
+		field.setUpdateCanvasSizeHandler(new UpdateCanvasSizeHandler() {
+			
+			@Override
+			public void onUpdateCanvasSize() {
+				String mimeType = getMimeType().getMimeType();
+				String newTextValue = getDataURL(mimeType);
+				changeValue(newTextValue, true);
+			}
+		});
 		field.setClearButtonVisible(getState().clearButtonEnabled);
 		field.setEndHandler(new EndHandler() {
 			

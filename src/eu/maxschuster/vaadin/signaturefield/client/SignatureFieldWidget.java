@@ -51,6 +51,8 @@ public class SignatureFieldWidget extends FlowPanel {
     
     private Image resizeTmpImage = new Image();
     
+    private UpdateCanvasSizeHandler updateCanvasSizeHandler;
+    
     private final RepeatingCommand resizeCommand =
     		new RepeatingCommand() {
 		
@@ -131,6 +133,9 @@ public class SignatureFieldWidget extends FlowPanel {
 			if (!empty) {
 				final ImageElement face = ImageElement.as(resizeTmpImage.getElement());
 				canvas.getContext2d().drawImage(face, 0, 0);
+			}
+			if (updateCanvasSizeHandler != null) {
+				updateCanvasSizeHandler.onUpdateCanvasSize();
 			}
 		}
 	}
@@ -272,6 +277,19 @@ public class SignatureFieldWidget extends FlowPanel {
 		return canvas.addFocusHandler(handler);
 	}
 	
-	
+	public UpdateCanvasSizeHandler getUpdateCanvasSizeHandler() {
+		return updateCanvasSizeHandler;
+	}
+
+	public void setUpdateCanvasSizeHandler(
+			UpdateCanvasSizeHandler updateCanvasSizeHandler) {
+		this.updateCanvasSizeHandler = updateCanvasSizeHandler;
+	}
+
+	public static interface UpdateCanvasSizeHandler {
+		
+		public void onUpdateCanvasSize();
+		
+	}
 	
 }
