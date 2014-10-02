@@ -16,6 +16,8 @@
 
 package eu.maxschuster.vaadin.signaturefield.client;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,7 +29,6 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.Connect;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
-import eu.maxschuster.vaadin.signaturefield.client.SignatureFieldWidget.UpdateCanvasSizeHandler;
 import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.EndHandler;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldClientRpc;
@@ -47,13 +48,29 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 				
 				@Override
 				public void onElementResize(ElementResizeEvent e) {
-					getWidget().updateCanvasSizeDebounced();
+					updateCanvasSizeDebounced();
 				}
 			};
+    
+    private final RepeatingCommand resizeCommand =
+    		new RepeatingCommand() {
+		
+		@Override
+		public boolean execute() {
+			getWidget().updateCanvasSize();
+			String mimeType = getMimeType().getMimeType();
+			String newTextValue = getDataURL(mimeType);
+			changeValue(newTextValue, true);
+			resizingDebounce = false;
+			return false;
+		}
+	};
 	
 	private String value;
 	
 	private boolean changed;
+    
+    private boolean resizingDebounce = false;
 	
 	private SignatureFieldServerRpc serverRpc = 
 			getRpcProxy(SignatureFieldServerRpc.class);
@@ -80,15 +97,6 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 	protected void init() {
 		super.init();
 		SignatureFieldWidget field = getWidget();
-		field.setUpdateCanvasSizeHandler(new UpdateCanvasSizeHandler() {
-			
-			@Override
-			public void onUpdateCanvasSize() {
-				String mimeType = getMimeType().getMimeType();
-				String newTextValue = getDataURL(mimeType);
-				changeValue(newTextValue, true);
-			}
-		});
 		field.setClearButtonVisible(getState().clearButtonEnabled);
 		field.setEndHandler(new EndHandler() {
 			
@@ -128,6 +136,12 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 	
 	protected MimeType getMimeType() {
 		return getState().mimeType != null ? getState().mimeType : MimeType.PNG;
+	}
+	
+	public void updateCanvasSizeDebounced() {
+		if (!resizingDebounce) {
+			Scheduler.get().scheduleFixedDelay(resizeCommand, 500);
+		}
 	}
 	
 	/**

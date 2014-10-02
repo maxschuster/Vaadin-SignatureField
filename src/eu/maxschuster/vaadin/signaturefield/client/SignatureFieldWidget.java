@@ -17,8 +17,6 @@
 package eu.maxschuster.vaadin.signaturefield.client;
 
 import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -50,21 +48,6 @@ public class SignatureFieldWidget extends FlowPanel {
     private final Anchor clearButton;
     
     private Image resizeTmpImage = new Image();
-    
-    private UpdateCanvasSizeHandler updateCanvasSizeHandler;
-    
-    private final RepeatingCommand resizeCommand =
-    		new RepeatingCommand() {
-		
-		@Override
-		public boolean execute() {
-			updateCanvasSize();
-			resizingDebounce = false;
-			return false;
-		}
-	};
-    
-    private boolean resizingDebounce = false;
 
 	public SignatureFieldWidget() {
 		
@@ -134,15 +117,6 @@ public class SignatureFieldWidget extends FlowPanel {
 				final ImageElement face = ImageElement.as(resizeTmpImage.getElement());
 				canvas.getContext2d().drawImage(face, 0, 0);
 			}
-			if (updateCanvasSizeHandler != null) {
-				updateCanvasSizeHandler.onUpdateCanvasSize();
-			}
-		}
-	}
-	
-	public void updateCanvasSizeDebounced() {
-		if (!resizingDebounce) {
-			Scheduler.get().scheduleFixedDelay(resizeCommand, 500);
 		}
 	}
 
@@ -276,20 +250,4 @@ public class SignatureFieldWidget extends FlowPanel {
 	public HandlerRegistration addFocusHandler(FocusHandler handler) {
 		return canvas.addFocusHandler(handler);
 	}
-	
-	public UpdateCanvasSizeHandler getUpdateCanvasSizeHandler() {
-		return updateCanvasSizeHandler;
-	}
-
-	public void setUpdateCanvasSizeHandler(
-			UpdateCanvasSizeHandler updateCanvasSizeHandler) {
-		this.updateCanvasSizeHandler = updateCanvasSizeHandler;
-	}
-
-	public static interface UpdateCanvasSizeHandler {
-		
-		public void onUpdateCanvasSize();
-		
-	}
-	
 }

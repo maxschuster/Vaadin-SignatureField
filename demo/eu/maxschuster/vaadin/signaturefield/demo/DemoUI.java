@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -44,6 +43,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
@@ -56,7 +56,6 @@ import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 @SuppressWarnings("serial")
 @Theme("signaturefield")
-@PreserveOnRefresh
 public class DemoUI extends UI {
 
 	@WebServlet(value = "/*", asyncSupported = true)
@@ -169,9 +168,9 @@ public class DemoUI extends UI {
 		dataUrlPreviewImage.setWidth("500px");
 		resultLayout.addComponent(dataUrlPreviewImage);
 		
-		final Image streamResourcePreviewImage = new Image("StreamResource preview image");
-		streamResourcePreviewImage.setWidth("500px");
-		resultLayout.addComponent(streamResourcePreviewImage);
+		final Link downloadLink = new Link("Signature download link", null);
+		downloadLink.setTargetName("_blank");
+		resultLayout.addComponent(downloadLink);
 		
 		final TextArea textArea = new TextArea("DataURL:");
 		textArea.setWidth("100%");
@@ -209,11 +208,23 @@ public class DemoUI extends UI {
 								return new ByteArrayInputStream(signature.getData());
 							}
 						};
-						streamResource = new StreamResource(streamSource, "signature.png");
+						MimeType mimeType = MimeType.valueOfMimeType(signature.getMimeType());
+						String extension = null;
+						
+						switch (mimeType) {
+						case JPEG:
+							extension = "jpg";
+							break;
+						case PNG:
+							extension = "png";
+							break;
+						}
+						
+						streamResource = new StreamResource(streamSource, "signature." + extension);
 						streamResource.setMIMEType(signature.getMimeType());
 						streamResource.setCacheTime(0);
 					}
-					streamResourcePreviewImage.setSource(streamResource);
+					downloadLink.setResource(streamResource);
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
