@@ -1,0 +1,7 @@
+@import "signaturefield/signaturefield";
+
+@mixin signaturefield {
+
+	@include signaturefield-signaturefield;
+
+}

@@ -1,9 +1,9 @@
 @import "addons";
-@import "signaturefield";
+@import "demo";
 
 /* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
 /* The actual styles should be defined in signaturepad.scss */
-.signaturefield {
+.demo {
   @include addons;
-  @include signaturefield;
+  @include demo;
 }

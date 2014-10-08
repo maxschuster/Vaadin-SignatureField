@@ -27,13 +27,11 @@
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
-@import "../valo/valo";
+@import "../reindeer/reindeer";
 
-@import "signaturefield/signaturefield";
+@import "../../addons/signaturefield/signaturefield";
 
-@mixin signaturefield {
-	@include valo;
-	
-	@include signaturefield-signaturefield;
-	
+@mixin demo {
+	@include reindeer;
+	@include signaturefield;
 }

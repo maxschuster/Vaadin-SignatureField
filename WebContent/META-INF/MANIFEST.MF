@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
+Vaadin-Stylesheets: VAADIN/addons/signaturefield/signaturefield.scss
 Implementation-Title: SignaturePad
-Implementation-Version: 1.0.0
-Vaadin-Widgetsets: eu.maxschuster.vaadin.signaturefield.SignaturePa
- dFieldWidgetset
+Implementation-Version: 0.0.4
+Vaadin-Widgetsets: eu.maxschuster.vaadin.signaturefield.SignatureField
+ Widgetset
 Vaadin-Package-Version: 1
 Class-Path: 
 

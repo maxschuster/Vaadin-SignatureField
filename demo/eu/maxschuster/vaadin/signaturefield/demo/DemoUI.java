@@ -55,7 +55,7 @@ import eu.maxschuster.vaadin.signaturefield.converter.StringToDataURLConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 @SuppressWarnings("serial")
-@Theme("signaturefield")
+@Theme("demo")
 public class DemoUI extends UI {
 
 	@WebServlet(value = "/*", asyncSupported = true)
