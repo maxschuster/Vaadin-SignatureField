@@ -1,0 +1,7 @@
+@import "../../../VAADIN/addons/signaturefield/signaturefield.scss";
+
+@mixin addons {
+    
+    @include signaturefield;
+    
+}
