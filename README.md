@@ -8,6 +8,9 @@ It uses szimek's [SignaturePad](https://github.com/szimek/signature_pad).
 ## Warning
 This Add-on is still under development. The API may change.
 
+## Demo
+[http://maxschuster.eu:8080/SignatureField/](http://maxschuster.eu:8080/SignatureField/)
+
 ## Usage
 ### Simple
 ``` java
