@@ -35,4 +35,6 @@
     
 
     <inherits name="eu.maxschuster.vaadin.signaturefield.WidgetSet" />
+
+    <inherits name="eu.maxschuster.vaadin.buttonlink.WidgetSet" />
 </module>

@@ -15,6 +15,7 @@
  */
 package eu.maxschuster.vaadin.signaturefield.client;
 
+import eu.maxschuster.vaadin.signaturefield.client.signaturepad.SignaturePad;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -28,8 +29,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
-import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.BeginHandler;
-import eu.maxschuster.vaadin.signaturefield.client.SignaturePad.EndHandler;
 
 /**
  * Widget of the {@link SignatureField}
@@ -40,13 +39,14 @@ public class VSignatureField extends FlowPanel {
 
     private static final String CLASSNAME = "signaturefield";
     private static final String CLASSNAME_FOCUS = "focus";
-    private static final String CLASSNAME_CLEARBUTTON = CLASSNAME + "-clearbutton";
+    private static final String CLASSNAME_CLEARBUTTON =
+            CLASSNAME + "-clearbutton";
 
     private final SignaturePad signaturePad;
     private final Canvas canvas;
     private final Anchor clearButton;
 
-    private Image resizeTmpImage = new Image();
+    private final Image resizeTmpImage = new Image();
 
     public VSignatureField() {
 
@@ -58,34 +58,34 @@ public class VSignatureField extends FlowPanel {
         clearButton = createClearButton();
         add(clearButton);
 
-        signaturePad = SignaturePad.create(canvas);
-
-        extendSignaturePad(signaturePad);
+        signaturePad = new SignaturePad(canvas);
     }
 
-    protected Canvas createCanvas() {
-        Canvas canvas = Canvas.createIfSupported();
-        canvas.addFocusHandler(new FocusHandler() {
+    private Canvas createCanvas() {
+        Canvas newCanvas = Canvas.createIfSupported();
+        newCanvas.setWidth("100%");
+        newCanvas.setHeight("100%");
+        newCanvas.addFocusHandler(new FocusHandler() {
             @Override
             public void onFocus(FocusEvent event) {
                 addStyleName(CLASSNAME_FOCUS);
                 addStyleDependentName(CLASSNAME_FOCUS);
             }
         });
-        canvas.addBlurHandler(new BlurHandler() {
+        newCanvas.addBlurHandler(new BlurHandler() {
             @Override
             public void onBlur(BlurEvent event) {
                 removeStyleName(CLASSNAME_FOCUS);
                 removeStyleDependentName(CLASSNAME_FOCUS);
             }
         });
-        return canvas;
+        return newCanvas;
     }
 
-    protected Anchor createClearButton() {
-        Anchor clearButton = new Anchor();
-        clearButton.setStylePrimaryName(CLASSNAME_CLEARBUTTON);
-        return clearButton;
+    private Anchor createClearButton() {
+        Anchor _clearButton = new Anchor();
+        _clearButton.setStylePrimaryName(CLASSNAME_CLEARBUTTON);
+        return _clearButton;
     }
 
     public HandlerRegistration addClearButtonClickHandler(ClickHandler handler) {
@@ -100,69 +100,45 @@ public class VSignatureField extends FlowPanel {
         clearButton.setVisible(clearButtonVisible);
     }
 
-    public void updateCanvasSize() {
+    public boolean updateCanvasSize() {
         int oldWidth = canvas.getCoordinateSpaceWidth();
         int newWidth = getElement().getClientWidth();
         int oldHeight = canvas.getCoordinateSpaceHeight();
         int newHeight = getElement().getClientHeight();
         boolean empty = signaturePad.isEmpty();
+        boolean sizeChanged = false;
         if (oldWidth != newWidth || oldHeight != newHeight) {
+            Console.log(newWidth, newHeight);
             if (!empty) {
                 resizeTmpImage.setUrl(canvas.toDataUrl("image/png"));
             }
             canvas.setCoordinateSpaceWidth(newWidth);
             canvas.setCoordinateSpaceHeight(newHeight);
             if (!empty) {
-                final ImageElement face = ImageElement.as(resizeTmpImage.getElement());
+                final ImageElement face =
+                        ImageElement.as(resizeTmpImage.getElement());
                 canvas.getContext2d().drawImage(face, 0, 0);
             }
+            sizeChanged = true;
         }
+        return sizeChanged;
     }
 
     public boolean isReadOnly() {
-        return getSignaturePadReadOnly(signaturePad);
+        return signaturePad.isReadOnly();
     }
 
     public void setReadOnly(boolean readOnly) {
-        setSignaturePadReadOnly(signaturePad, readOnly);
+        signaturePad.setReadOnly(readOnly);
     }
-
-    protected static final native void extendSignaturePad(SignaturePad pad) /*-{
-     var super_strokeBegin = pad._strokeBegin,
-     super_strokeUpdate = pad._strokeUpdate,
-     canvas = pad._canvas;
-			
-     // proxy stroke methods to allow read only function
-     pad._strokeBegin = function(event) {
-     if (pad.readOnly !== true) {
-     canvas.focus(); // fix focus issue on touch devices
-     super_strokeBegin.apply(pad, [event]);
-     } else {
-     pad._mouseButtonDown = false;
-     }
-     };
-     pad._strokeUpdate = function(event) {
-     if (pad.readOnly !== true) {
-     super_strokeUpdate.apply(pad, [event]);
-     }
-     };
-     }-*/;
-
-    protected static final native boolean getSignaturePadReadOnly(SignaturePad pad) /*-{
-     return typeof pad.readOnly === "boolean" ? pad.readOnly : false;
-     }-*/;
-
-    protected static final native void setSignaturePadReadOnly(SignaturePad pad, boolean readOnly) /*-{
-     pad.readOnly = readOnly;
-     }-*/;
 
     /* DELEGATES */
     public final String toDataURL() {
-        return signaturePad.toDataURL();
+        return toDataURL("image/png");
     }
 
     public final String toDataURL(String mimeType) {
-        return signaturePad.toDataURL(mimeType);
+        return signaturePad.toDataURL(mimeType, 1.0f);
     }
 
     public final void fromDataURL(String dataURL) {
@@ -170,35 +146,39 @@ public class VSignatureField extends FlowPanel {
         signaturePad.fromDataURL(dataURL);
     }
 
-    public final void clearSignaturePad() {
-        signaturePad.clear();
+    public SignaturePad getSignaturePad() {
+        return signaturePad;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     public final boolean isEmpty() {
         return signaturePad.isEmpty();
     }
 
-    public final Float getDotSize() {
+    public final Double getDotSize() {
         return signaturePad.getDotSize();
     }
 
-    public final void setDotSize(Float dotSize) {
+    public final void setDotSize(Double dotSize) {
         signaturePad.setDotSize(dotSize);
     }
 
-    public final float getMinWidth() {
+    public final double getMinWidth() {
         return signaturePad.getMinWidth();
     }
 
-    public final void setMinWidth(float minWidth) {
+    public final void setMinWidth(double minWidth) {
         signaturePad.setMinWidth(minWidth);
     }
 
-    public final float getMaxWidth() {
+    public final double getMaxWidth() {
         return signaturePad.getMaxWidth();
     }
 
-    public final void setMaxWidth(float maxWidth) {
+    public final void setMaxWidth(double maxWidth) {
         signaturePad.setMaxWidth(maxWidth);
     }
 
@@ -218,28 +198,12 @@ public class VSignatureField extends FlowPanel {
         signaturePad.setPenColor(penColor);
     }
 
-    public final float getVelocityFilterWeight() {
+    public final double getVelocityFilterWeight() {
         return signaturePad.getVelocityFilterWeight();
     }
 
-    public final void setVelocityFilterWeight(float velocityFilterWeight) {
+    public final void setVelocityFilterWeight(double velocityFilterWeight) {
         signaturePad.setVelocityFilterWeight(velocityFilterWeight);
-    }
-
-    public final BeginHandler getBeginHandler() {
-        return signaturePad.getBeginHandler();
-    }
-
-    public final void setBeginHandler(BeginHandler beginHandler) {
-        signaturePad.setBeginHandler(beginHandler);
-    }
-
-    public final EndHandler getEndHandler() {
-        return signaturePad.getEndHandler();
-    }
-
-    public final void setEndHandler(EndHandler endHandler) {
-        signaturePad.setEndHandler(endHandler);
     }
 
     public HandlerRegistration addBlurHandler(BlurHandler handler) {
@@ -249,4 +213,5 @@ public class VSignatureField extends FlowPanel {
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
         return canvas.addFocusHandler(handler);
     }
+    
 }

@@ -24,24 +24,31 @@ import com.google.gwt.core.client.JavaScriptObject;
  * 
  * @author Max Schuster
  */
-class Console extends JavaScriptObject {
+public class Console extends JavaScriptObject {
 	
-	protected Console() {}
-	
-	public static final native boolean isSupported() /*-{
-		return typeof $wnd.console === "object";
-	}-*/;
-	
-	public static final native void log(Object...objects) /*-{
-		if (typeof $wnd.console === "object") {
-			$wnd.console.log.apply(console, objects);
-		}
-	}-*/;
-	
-	public static final native void error(Object...objects) /*-{
-		if (typeof $wnd.console === "object") {
-			$wnd.console.error.apply(console, objects);
-		}
-	}-*/;
+    protected Console() {}
+
+    public static final native boolean isSupported() /*-{
+            return typeof $wnd.console === "object";
+    }-*/;
+
+    public static final native void log(Object...objects) /*-{
+            if (typeof $wnd.console === "object") {
+                    $wnd.console.log.apply(console, objects);
+            }
+    }-*/;
+
+    public static final native void error(Object...objects) /*-{
+            if (typeof $wnd.console === "object") {
+                    $wnd.console.error.apply(console, objects);
+            }
+    }-*/;
+
+    public static final native void debugger(Object...objects) /*-{
+        if (typeof $wnd.console === "object") {
+            $wnd.console.log.apply(console, objects);
+            debugger;
+        }
+    }-*/;
 	
 }
