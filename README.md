@@ -1,7 +1,7 @@
 SignatureField
 ==============
 
-A Vaadin Field (AbstractField&lt;Stirng&gt;) to capture signatures.
+A Vaadin Field (AbstractField&lt;String&gt;) to capture signatures.
 Its value is the dataURL from the html canvas as simple String.
 It uses szimek's [SignaturePad](https://github.com/szimek/signature_pad).
 

@@ -256,6 +256,7 @@ public class SignaturePad implements HasHandlers {
             @Override
             public void onTouchStart(TouchStartEvent event) {
                 Event.setCapture(event.getRelativeElement());
+                canvas.setFocus(true);
                 event.preventDefault();
                 Touch touch = event.getTouches().get(0);
                 strokeBegin(new EventWrapper(touch));
@@ -276,9 +277,8 @@ public class SignaturePad implements HasHandlers {
 
             @Override
             public void onTouchEnd(TouchEndEvent event) {
-                Event.setCapture(event.getRelativeElement());
-                event.preventDefault();
                 strokeEnd(new EventWrapper(event.getNativeEvent()));
+                Event.releaseCapture(event.getRelativeElement());
             }
         });
     }
