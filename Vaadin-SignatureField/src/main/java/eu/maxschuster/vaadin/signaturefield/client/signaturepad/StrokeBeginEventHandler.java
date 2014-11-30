@@ -18,11 +18,12 @@ package eu.maxschuster.vaadin.signaturefield.client.signaturepad;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- *
- * @author Max
+ * Handles {@link StrokeBeginEvent}s
+ * 
+ * @author Max Schuster
  */
-public interface BeginEventHandler extends EventHandler {
+public interface StrokeBeginEventHandler extends EventHandler {
     
-    public void onBegin(BeginEvent event);
+    public void onStrokeBegin(StrokeBeginEvent event);
     
 }

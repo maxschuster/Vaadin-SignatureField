@@ -55,14 +55,16 @@ public enum MimeType {
 	public static MimeType valueOfMimeType(String mimeType) throws
 			NullPointerException, IllegalArgumentException {
 		if (mimeType == null) {
-			throw new NullPointerException("mimeType must not be null!");
+			throw new NullPointerException(
+                                "mimeType must not be null!");
 		}
 		for (MimeType mime : values()) {
 			if (mime.getMimeType().equals(mimeType)) {
 				return mime;
 			}
 		}
-		throw new IllegalArgumentException("MIME-Type " + mimeType + " not found!");
+		throw new IllegalArgumentException(
+                        "MIME-Type " + mimeType + " not found!");
 	}
 	
 }

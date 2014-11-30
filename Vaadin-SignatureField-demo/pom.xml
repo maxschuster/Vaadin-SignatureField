@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.maxschuster.vaadin</groupId>
-	<artifactId>signature-field-demo</artifactId>
-	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>Vaadin-SignatureField - SignatureField Add-on Demo</name>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>eu.maxschuster.vaadin</groupId>
+    <artifactId>signature-field-demo</artifactId>
+    <packaging>war</packaging>
+    <version>2.0.0.alpha1</version>
+    <name>Vaadin-SignatureField - SignatureField Add-on Demo</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>7.3.5</vaadin.version>
-		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
-	</properties>
+    <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <vaadin.version>7.3.5</vaadin.version>
+            <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+    </properties>
 
-    <!--     
-	<organization>
-		<name>My Name</name>
-		<url>https://github.com/mygithubaccount/SignatureField/</url>
-	</organization>
-    
-	<scm>
-		<url>git://github.com/mygithubaccount/SignatureField.git</url>
-		<connection>scm:git:git://github.com/mygithubaccount/SignatureField.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${ComponentClassName}.git</developerConnection>
-		<tag>SignatureField add-on for Vaadin</tag>
-	</scm>
+    <organization>
+            <name>Max Schuster</name>
+            <url>https://github.com/maxschuster/Vaadin-SignatureField</url>
+    </organization>
 
-        <issueManagement>
-                <system>GitHub</system>
-                <url>https://github.com/mygithubaccount/SignatureField/issues</url>
-        </issueManagement>
-    -->
+    <scm>
+            <url>https://github.com/maxschuster/Vaadin-SignatureField.git</url>
+            <connection>scm:git:https://github.com/maxschuster/Vaadin-SignatureField.git</connection>
+            <developerConnection>scm:git:ssh://git@github.com:maxschuster/Vaadin-SignatureField.git</developerConnection>
+            <tag>SignatureField add-on for Vaadin</tag>
+    </scm>
+
+    <issueManagement>
+            <system>GitHub</system>
+            <url>https://github.com/maxschuster/Vaadin-SignatureField/issues</url>
+    </issueManagement>
 
     <licenses>
         <license>
@@ -82,7 +80,7 @@
     <dependencies>
         <dependency>
             <groupId>eu.maxschuster.vaadin</groupId>
-            <artifactId>Vaadin-SignatureField</artifactId>
+            <artifactId>signature-field</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>

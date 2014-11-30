@@ -19,8 +19,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 
 /**
- *
- * @author Max
+ * Debouncer for commands
+ * 
+ * @author Max Schuster
  */
 public class Debouncer {
     

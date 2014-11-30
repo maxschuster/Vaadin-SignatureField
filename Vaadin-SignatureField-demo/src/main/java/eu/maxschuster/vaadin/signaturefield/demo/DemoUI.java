@@ -15,6 +15,7 @@
  */
 package eu.maxschuster.vaadin.signaturefield.demo;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -27,12 +28,13 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -40,31 +42,34 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.dataurl.DataUrlSerializer;
 import eu.maxschuster.dataurl.DefaultDataUrlSerializer;
 import eu.maxschuster.vaadin.buttonlink.ButtonLink;
+import eu.maxschuster.vaadin.signaturefield.Color;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
-import eu.maxschuster.vaadin.signaturefield.converter.StringToDataURLConverter;
+import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import java.io.IOException;
 import java.util.Arrays;
-import org.apache.commons.io.IOUtils;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
 @Theme("demo")
+@PreserveOnRefresh
 public class DemoUI extends UI {
 
     @WebServlet(value = "/*", asyncSupported = true)
@@ -73,7 +78,34 @@ public class DemoUI extends UI {
             ui = DemoUI.class,
             widgetset = "eu.maxschuster.vaadin.signaturefield.demo.DemoWidgetSet"
     )
-    public static class Servlet extends VaadinServlet { }
+    public static class Servlet extends VaadinServlet {
+
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            super.doPost(req, resp);
+        }
+
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            super.doGet(req, resp);
+        }
+        
+        
+        
+    }
+    
+    private transient final Logger logger =
+            LoggerFactory.getLogger(DemoUI.class);
 
     private final ObjectProperty<DataUrl> dataUrlProperty
             = new ObjectProperty<DataUrl>(null, DataUrl.class);
@@ -90,33 +122,8 @@ public class DemoUI extends UI {
     
     private final String pageTitle = "Vaadin-SignatureField";
 
-    private final String VALUE_1;
-
-    private final String VALUE_2;
-
-    private final String VALUE_3;
-
     public DemoUI(Component content) {
         super(content);
-        
-        String value1 = null;
-        String value2 = null;
-        String value3 = null;
-        
-        try {
-            value1 = IOUtils.toString(
-                DemoUI.class.getResource("value1.txt"), "UTF-8");
-            value2 = IOUtils.toString(
-                DemoUI.class.getResource("value2.txt"), "UTF-8");
-            value3 = IOUtils.toString(
-                DemoUI.class.getResource("value3.txt"), "UTF-8"); 
-        } catch(IOException ex) {
-            ex.printStackTrace();
-        }
-        
-        VALUE_1 = value1;
-        VALUE_2 = value2;
-        VALUE_3 = value3;
     }
 
     public DemoUI() {
@@ -127,14 +134,16 @@ public class DemoUI extends UI {
     protected void init(VaadinRequest request) {
         
         getPage().setTitle(pageTitle);
-
-        final MarginInfo marginTopBottom = new MarginInfo(5);
+        
+        final VerticalLayout margin = new VerticalLayout();
+        setContent(margin);
 
         final VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
-        layout.setWidth("100%");
-        setContent(layout);
+        layout.setWidth("658px");
+        margin.addComponent(layout);
+        margin.setComponentAlignment(layout, Alignment.TOP_CENTER);
         
         final Label header1 = new Label(pageTitle);
         header1.addStyleName("h1");
@@ -143,7 +152,7 @@ public class DemoUI extends UI {
         layout.setComponentAlignment(header1, Alignment.TOP_CENTER);
         
         final TabSheet tabSheet = new TabSheet();
-        tabSheet.setWidth("658px");
+        tabSheet.setWidth("100%");
         layout.addComponent(tabSheet);
         layout.setComponentAlignment(tabSheet, Alignment.TOP_CENTER);
 
@@ -161,9 +170,9 @@ public class DemoUI extends UI {
         final SignatureField signatureField = new SignatureField();
         signatureField.setWidth("100%");
         signatureField.setHeight("318px");
-        signatureField.setPenColor(SignatureField.COLOR_ULTRAMARIN);
+        signatureField.setPenColor(Color.ULTRAMARINE);
         signatureField.setBackgroundColor("white");
-        signatureField.setConverter(new StringToDataURLConverter());
+        signatureField.setConverter(new StringToDataUrlConverter());
         signatureField.setPropertyDataSource(dataUrlProperty);
         signatureField.setVelocityFilterWeight(0.7);
         signatureLayout.addComponent(signatureField);
@@ -244,7 +253,8 @@ public class DemoUI extends UI {
             }
         });
 
-        final CheckBox requiredCheckBox = new CheckBox("required", false);
+        final CheckBox requiredCheckBox = new CheckBox(
+                "required (causes bug that clears field)", false);
         optionsLayout.addComponent(requiredCheckBox);
         requiredCheckBox.addValueChangeListener(new ValueChangeListener() {
 
@@ -270,8 +280,8 @@ public class DemoUI extends UI {
         resultPanel.setWidth("100%");
         layout.addComponent(resultPanel);
 
-        final FormLayout resultLayout = new FormLayout();
-        resultLayout.setMargin(marginTopBottom);
+        final VerticalLayout resultLayout = new VerticalLayout();
+        resultLayout.setMargin(true);
         resultPanel.setContent(resultLayout);
 
         final Image stringPreviewImage = new Image("String preview image:");
@@ -334,8 +344,7 @@ public class DemoUI extends UI {
                     }
                     saveButtonLink.setResource(streamResource);
                 } catch (MalformedURLException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
         });

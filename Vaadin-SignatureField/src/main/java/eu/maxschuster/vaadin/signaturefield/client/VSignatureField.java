@@ -17,6 +17,7 @@ package eu.maxschuster.vaadin.signaturefield.client;
 
 import eu.maxschuster.vaadin.signaturefield.client.signaturepad.SignaturePad;
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -46,8 +47,6 @@ public class VSignatureField extends FlowPanel {
     private final Canvas canvas;
     private final Anchor clearButton;
 
-    private final Image resizeTmpImage = new Image();
-
     public VSignatureField() {
 
         setStylePrimaryName(CLASSNAME);
@@ -63,8 +62,6 @@ public class VSignatureField extends FlowPanel {
 
     private Canvas createCanvas() {
         Canvas newCanvas = Canvas.createIfSupported();
-        newCanvas.setWidth("100%");
-        newCanvas.setHeight("100%");
         newCanvas.addFocusHandler(new FocusHandler() {
             @Override
             public void onFocus(FocusEvent event) {
@@ -98,30 +95,6 @@ public class VSignatureField extends FlowPanel {
 
     public void setClearButtonVisible(boolean clearButtonVisible) {
         clearButton.setVisible(clearButtonVisible);
-    }
-
-    public boolean updateCanvasSize() {
-        int oldWidth = canvas.getCoordinateSpaceWidth();
-        int newWidth = getElement().getClientWidth();
-        int oldHeight = canvas.getCoordinateSpaceHeight();
-        int newHeight = getElement().getClientHeight();
-        boolean empty = signaturePad.isEmpty();
-        boolean sizeChanged = false;
-        if (oldWidth != newWidth || oldHeight != newHeight) {
-            Console.log(newWidth, newHeight);
-            if (!empty) {
-                resizeTmpImage.setUrl(canvas.toDataUrl("image/png"));
-            }
-            canvas.setCoordinateSpaceWidth(newWidth);
-            canvas.setCoordinateSpaceHeight(newHeight);
-            if (!empty) {
-                final ImageElement face =
-                        ImageElement.as(resizeTmpImage.getElement());
-                canvas.getContext2d().drawImage(face, 0, 0);
-            }
-            sizeChanged = true;
-        }
-        return sizeChanged;
     }
 
     public boolean isReadOnly() {

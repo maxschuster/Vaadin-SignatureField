@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.maxschuster.vaadin</groupId>
-	<artifactId>signature-field</artifactId>
-	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>Vaadin-SignatureField - SignatureField Add-on</name>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>eu.maxschuster.vaadin</groupId>
+    <artifactId>signature-field</artifactId>
+    <packaging>jar</packaging>
+    <version>2.0.0.alpha1</version>
+    <name>Vaadin-SignatureField - SignatureField Add-on</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>7.3.5</vaadin.version>
-		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+    <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <vaadin.version>7.3.5</vaadin.version>
+            <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
-		<!-- ZIP Manifest fields -->
-		<Implementation-Version>${project.version}</Implementation-Version>
-		<!-- Must not change this because of the Directory -->
-		<Implementation-Title>${project.name}</Implementation-Title>
-		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-		<Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
-		<Vaadin-Addon>${artifactId}-${project.version}.jar</Vaadin-Addon>
-	</properties>
+            <!-- ZIP Manifest fields -->
+            <Implementation-Version>${project.version}</Implementation-Version>
+            <!-- Must not change this because of the Directory -->
+            <Implementation-Title>${project.name}</Implementation-Title>
+            <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+            <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
+            <Vaadin-Addon>${artifactId}-${project.version}.jar</Vaadin-Addon>
+    </properties>
 
-    <!--     
-	<organization>
-		<name>My Name</name>
-		<url>https://github.com/mygithubaccount/SignatureField/</url>
-	</organization>
-    
-	<scm>
-		<url>git://github.com/mygithubaccount/SignatureField.git</url>
-		<connection>scm:git:git://github.com/mygithubaccount/SignatureField.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${ComponentClassName}.git</developerConnection>
-		<tag>SignatureField add-on for Vaadin</tag>
-	</scm>
+    <organization>
+            <name>Max Schuster</name>
+            <url>https://github.com/maxschuster/Vaadin-SignatureField</url>
+    </organization>
 
-        <issueManagement>
-                <system>GitHub</system>
-                <url>https://github.com/mygithubaccount/SignatureField/issues</url>
-        </issueManagement>
-    -->
+    <scm>
+            <url>https://github.com/maxschuster/Vaadin-SignatureField.git</url>
+            <connection>scm:git:https://github.com/maxschuster/Vaadin-SignatureField.git</connection>
+            <developerConnection>scm:git:ssh://git@github.com:maxschuster/Vaadin-SignatureField.git</developerConnection>
+            <tag>SignatureField add-on for Vaadin</tag>
+    </scm>
+
+    <issueManagement>
+            <system>GitHub</system>
+            <url>https://github.com/maxschuster/Vaadin-SignatureField/issues</url>
+    </issueManagement>
 
     <licenses>
         <license>

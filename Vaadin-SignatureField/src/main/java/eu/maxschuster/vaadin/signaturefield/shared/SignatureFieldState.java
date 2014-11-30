@@ -74,6 +74,6 @@ public class SignatureFieldState extends AbstractFieldState {
     /**
      * Value of the field
      */
-    public String dataUrl;
+    public String value = null;
 
 }

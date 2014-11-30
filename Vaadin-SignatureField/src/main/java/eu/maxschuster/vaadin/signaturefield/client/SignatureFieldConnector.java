@@ -15,6 +15,7 @@
  */
 package eu.maxschuster.vaadin.signaturefield.client;
 
+import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -28,8 +29,8 @@ import com.vaadin.shared.ui.Connect;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
 import eu.maxschuster.vaadin.signaturefield.client.signaturepad.Debouncer;
-import eu.maxschuster.vaadin.signaturefield.client.signaturepad.EndEvent;
-import eu.maxschuster.vaadin.signaturefield.client.signaturepad.EndEventHandler;
+import eu.maxschuster.vaadin.signaturefield.client.signaturepad.StrokeEndEvent;
+import eu.maxschuster.vaadin.signaturefield.client.signaturepad.StrokeEndEventHandler;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldServerRpc;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
@@ -56,17 +57,23 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 
                 @Override
                 public boolean execute() {
-                    boolean sizeChanged = getWidget().updateCanvasSize();
+                    /*
+                    boolean sizeChanged = updateCanvasSize();
                     if (sizeChanged) {
                         String mimeType = getMimeType().getMimeType();
                         String newTextValue = getDataURL(mimeType);
+                        Console.log("resize", newTextValue);
                         changeValue(newTextValue, true);
                     }
+                    */
+                    updateCanvasSize();
                     return false;
                 }
             }, 500);
 
     private String value;
+    
+    private String lastSendValue;
 
     private boolean changed;
 
@@ -81,13 +88,13 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
     protected void init() {
         super.init();
         VSignatureField field = getWidget();
+        
         field.setReadOnly(true);
-        field.setClearButtonVisible(getState().clearButtonEnabled);
 
-        field.getSignaturePad().addEndEventHandler(new EndEventHandler() {
+        field.getSignaturePad().addEndEventHandler(new StrokeEndEventHandler() {
 
             @Override
-            public void onEnd(EndEvent event) {
+            public void onStrokeEnd(StrokeEndEvent event) {
                 String mimeType = getMimeType().getMimeType();
                 String newTextValue = getDataURL(mimeType);
                 changeValue(newTextValue, null);
@@ -151,6 +158,7 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
     protected void updateValueOnServer() {
         if (!getState().readOnly) {
             serverRpc.setTextValue(value);
+            lastSendValue = value;
             changed = false;
         }
     }
@@ -167,11 +175,15 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
         field.setPenColor(state.penColor);
         field.setVelocityFilterWeight(state.velocityFilterWeight);
 
-        field.setClearButtonVisible(state.clearButtonEnabled);
-
-        field.setReadOnly(state.readOnly);
-        if (state.readOnly) {
-            field.setClearButtonVisible(false);
+        if (event.hasPropertyChanged("clearButtonEnabled")) {
+            field.setClearButtonVisible(state.clearButtonEnabled);
+        }
+        
+        if (event.hasPropertyChanged("readOnly")) {
+            field.setReadOnly(state.readOnly);
+            if (state.readOnly) {
+                field.setClearButtonVisible(false);
+            }
         }
 
         if (event.hasPropertyChanged("mimeType") && !getWidget().isEmpty()) {
@@ -182,24 +194,46 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
 
         if (event.hasPropertyChanged("backgroundColor")) {
             field.setBackgroundColor(state.backgroundColor);
-            field.getSignaturePad().clear();
         }
 
         if (event.hasPropertyChanged("height")
                 || event.hasPropertyChanged("width")) {
-            field.updateCanvasSize();
+            updateCanvasSize();
         }
         
-        if (event.hasPropertyChanged("dataUrl")) {
-            String dataUrl = state.dataUrl;
-            if (dataUrl == null) {
+        if (event.hasPropertyChanged("value")) {
+            String stateValue = state.value;
+            if (stateValue == null || stateValue.isEmpty()) {
                 field.getSignaturePad().clear();
+                value = null;
             } else {
-                if (value == null || !value.equals(dataUrl)) {
-                    getWidget().fromDataURL(state.dataUrl);
+                if (lastSendValue == null ||
+                        !lastSendValue.equals(stateValue)) {
+                    getWidget().fromDataURL(stateValue);
                 }
             }
+            value = stateValue;
         }
+    }
+
+    public boolean updateCanvasSize() {
+        VSignatureField field = getWidget();
+        Canvas canvas = field.getCanvas();
+        int oldWidth = canvas.getCoordinateSpaceWidth();
+        int newWidth = field.getElement().getClientWidth();
+        int oldHeight = canvas.getCoordinateSpaceHeight();
+        int newHeight = field.getElement().getClientHeight();
+        boolean empty = field.isEmpty();
+        boolean sizeChanged = false;
+        if (oldWidth != newWidth || oldHeight != newHeight) {
+            canvas.setCoordinateSpaceWidth(newWidth);
+            canvas.setCoordinateSpaceHeight(newHeight);
+            if (!empty) {
+                field.getSignaturePad().fromDataURL(value);
+            }
+            sizeChanged = true;
+        }
+        return sizeChanged;
     }
 
     @Override

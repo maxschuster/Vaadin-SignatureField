@@ -50,8 +50,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * A GWT Version of <code>SignaturePad</code> by
- * <b>Szymon Nowak (szimek)</b> that can be found at 
+ * A GWT port of {@code SignaturePad} by
+ * <b>Szymon Nowak (<a href="https://github.com/szimek">
+ * szimek</a>)</b>.<br>
+ * <br>
+ * The MIT licensed original version can be found at 
  * <a href="https://github.com/szimek/signature_pad">
  * https://github.com/szimek/signature_pad</a><br>
  * <br>
@@ -104,20 +107,20 @@ public class SignaturePad implements HasHandlers {
         handlerManager.fireEvent(event);
     }
     
-    public HandlerRegistration addBeginEventHandler(BeginEventHandler handler) {
-        return handlerManager.addHandler(BeginEvent.TYPE, handler);
+    public HandlerRegistration addBeginEventHandler(StrokeBeginEventHandler handler) {
+        return handlerManager.addHandler(StrokeBeginEvent.TYPE, handler);
     }
     
-    public HandlerRegistration addEndEventHandler(EndEventHandler handler) {
-        return handlerManager.addHandler(EndEvent.TYPE, handler);
+    public HandlerRegistration addEndEventHandler(StrokeEndEventHandler handler) {
+        return handlerManager.addHandler(StrokeEndEvent.TYPE, handler);
     }
     
-    public void removeBeginEventHandler(BeginEventHandler handler) {
-        handlerManager.removeHandler(BeginEvent.TYPE, handler);
+    public void removeBeginEventHandler(StrokeBeginEventHandler handler) {
+        handlerManager.removeHandler(StrokeBeginEvent.TYPE, handler);
     }
     
-    public void removeEndEventHandler(EndEventHandler handler) {
-        handlerManager.removeHandler(EndEvent.TYPE, handler);
+    public void removeEndEventHandler(StrokeEndEventHandler handler) {
+        handlerManager.removeHandler(StrokeEndEvent.TYPE, handler);
     }
 
     public void clear() {
@@ -135,6 +138,27 @@ public class SignaturePad implements HasHandlers {
         return canvas.toDataUrl(imageType);
     }
     
+    public void fromDataURL(String dataURL, final Double width,
+            final Double height) {
+        SafeUri uri = UriUtils.fromTrustedString(dataURL);
+        final Image image = new Image(uri);
+        image.addLoadHandler(new LoadHandler() {
+            @Override
+            public void onLoad(LoadEvent event) {
+                ImageElement imageElement = ImageElement.as(image.getElement());
+                if (width == null && height == null) {
+                     context.drawImage(imageElement, 0d, 0d);
+                } else {
+                    context.drawImage(imageElement, 0d, 0d, width, height);
+                }
+                
+                RootPanel.get().remove(image);
+            }
+        });
+        RootPanel.get().add(image);
+        empty = false;
+    }
+    
     public void fromDataURL(String dataURL) {
         Double ratio = getDevicePixelWidth();
         if (ratio == null) {
@@ -142,35 +166,14 @@ public class SignaturePad implements HasHandlers {
         }
         final double width = canvas.getCoordinateSpaceWidth() / ratio;
         final double height = canvas.getCoordinateSpaceHeight() / ratio;
-        SafeUri uri = UriUtils.fromTrustedString(dataURL);
-        final Image image = new Image(uri);
-        image.addLoadHandler(new LoadHandler() {
-            @Override
-            public void onLoad(LoadEvent event) {
-                ImageElement imageElement = ImageElement.as(image.getElement());
-                context.drawImage(imageElement, 0d, 0d, width, height);
-                RootPanel.get().remove(image);
-            }
-        });
-        RootPanel.get().add(image);
+        
+        fromDataURL(dataURL, width, height);
     }
     
     private void strokeUpdate(EventWrapper event) {
         if (isReadOnly()) {
             return;
         }
-        /*
-        Console.log(
-                "update",
-                "" + velocityFilterWeight, 
-                "" + minWidth, 
-                "" + maxWidth, 
-                "" + getAppliedDotSize(), 
-                "" + penColor, 
-                "" + backgroundColor, 
-                "" + lastVelocity, 
-                "" + lastWidth);
-        */
         Point point = createPoint(event);
         addPoint(point);
     };
@@ -181,7 +184,7 @@ public class SignaturePad implements HasHandlers {
         }
         reset();
         strokeUpdate(event);
-        fireEvent(new BeginEvent(this));
+        fireEvent(new StrokeBeginEvent(this));
     };
 
     private void strokeDraw(Point point) {
@@ -199,7 +202,7 @@ public class SignaturePad implements HasHandlers {
             strokeDraw(point);
         }
         
-        fireEvent(new EndEvent(this));
+        fireEvent(new StrokeEndEvent(this));
     };
     
     private void handleMouseEvents() {

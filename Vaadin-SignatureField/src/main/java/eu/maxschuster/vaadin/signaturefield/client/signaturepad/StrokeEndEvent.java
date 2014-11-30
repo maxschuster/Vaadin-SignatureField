@@ -18,28 +18,29 @@ package eu.maxschuster.vaadin.signaturefield.client.signaturepad;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- *
- * @author Max
+ * Gets fired when the user stroke ends
+ * 
+ * @author Max Schuster
  */
-public class EndEvent extends GwtEvent<EndEventHandler> {
+public class StrokeEndEvent extends GwtEvent<StrokeEndEventHandler> {
     
-    public static final Type<EndEventHandler> TYPE =
-            new Type<EndEventHandler>();
+    public static final Type<StrokeEndEventHandler> TYPE =
+            new Type<StrokeEndEventHandler>();
     
     private final SignaturePad signaturePad;
 
-    public EndEvent(SignaturePad signaturePad) {
+    public StrokeEndEvent(SignaturePad signaturePad) {
         this.signaturePad = signaturePad;
     }
 
     @Override
-    public Type<EndEventHandler> getAssociatedType() {
+    public Type<StrokeEndEventHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(EndEventHandler handler) {
-        handler.onEnd(this);
+    protected void dispatch(StrokeEndEventHandler handler) {
+        handler.onStrokeEnd(this);
     }
 
     public SignaturePad getSignaturePad() {

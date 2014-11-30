@@ -15,35 +15,15 @@
  */
 package eu.maxschuster.vaadin.signaturefield.client.signaturepad;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- *
- * @author Max
+ * Handles {@link StrokeEndEvent}s
+ * 
+ * @author Max Schuster
  */
-public class BeginEvent extends GwtEvent<BeginEventHandler> {
+public interface StrokeEndEventHandler extends EventHandler {
     
-    public static final Type<BeginEventHandler> TYPE =
-            new Type<BeginEventHandler>();
+    public void onStrokeEnd(StrokeEndEvent event);
     
-    private final SignaturePad signaturePad;
-
-    public BeginEvent(SignaturePad signaturePad) {
-        this.signaturePad = signaturePad;
-    }
-
-    @Override
-    public Type<BeginEventHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    @Override
-    protected void dispatch(BeginEventHandler handler) {
-        handler.onBegin(this);
-    }
-
-    public SignaturePad getSignaturePad() {
-        return signaturePad;
-    }
-
 }

@@ -20,7 +20,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * Interface to window.console.
- * For debug purposes only.
+ * For internal debug purposes only.
  * 
  * @author Max Schuster
  */
