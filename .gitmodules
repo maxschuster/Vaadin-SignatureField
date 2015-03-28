@@ -1,3 +1,4 @@
 [submodule "signature_pad"]
 	path = Vaadin-SignatureField/src/main/resources/eu/maxschuster/vaadin/signaturefield/js/signature_pad
 	url = https://github.com/szimek/signature_pad.git
+
