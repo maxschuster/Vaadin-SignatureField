@@ -27,6 +27,6 @@ import eu.maxschuster.vaadin.signaturefield.SignatureField;
  */
 public interface SignatureFieldServerRpc extends ServerRpc {
 
-	public void setTextValue(String textValue);
+    public void setTextValue(String textValue);
 	
 }

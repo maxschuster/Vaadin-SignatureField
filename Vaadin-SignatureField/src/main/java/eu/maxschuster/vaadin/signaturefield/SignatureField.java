@@ -16,7 +16,8 @@
 package eu.maxschuster.vaadin.signaturefield;
 
 import com.vaadin.data.Property;
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.data.Validator;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.AbstractField;
 import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
@@ -135,9 +136,9 @@ public class SignatureField extends AbstractField<String> {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        
-        getState().value = getValue();
-        System.err.println("value = " + getState().value);
+        if (initial) {
+            getState().value = getValue();
+        }
     }
     
     private boolean isEqualNullSafe(Object value1, Object value2) {
@@ -147,6 +148,13 @@ public class SignatureField extends AbstractField<String> {
             return value1.equals(value2);
         }
         return false;
+    }
+
+    @Override
+    protected void setInternalValue(String newValue) {
+        super.setInternalValue(newValue);
+        // Update the state value without causing a redraw
+        getState(false).value = newValue;
     }
 
     /**
@@ -178,6 +186,17 @@ public class SignatureField extends AbstractField<String> {
     }
 
     /**
+     * Sets the radius of a single dot.
+     *
+     * @param dotSize Radius of a single dot.
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withDotSize(Double dotSize) {
+        getState().dotSize = dotSize;
+        return this;
+    }
+
+    /**
      * Gets the minimum width of a line. Defaults to 0.5.
      *
      * @return Minimum width of a line.
@@ -193,6 +212,17 @@ public class SignatureField extends AbstractField<String> {
      */
     public void setMinWidth(double minWidth) {
         getState().minWidth = minWidth;
+    }
+
+    /**
+     * Sets the minimum width of a line. Defaults to 0.5.
+     *
+     * @param minWidth Minimum width of a line.
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withMinWidth(double minWidth) {
+        setMinWidth(minWidth);
+        return this;
     }
 
     /**
@@ -212,6 +242,18 @@ public class SignatureField extends AbstractField<String> {
     public void setMaxWidth(double maxWidth) {
         getState().maxWidth = maxWidth;
     }
+
+    /**
+     * Sets the maximum width of a line.
+     *
+     * @param maxWidth Maximum width of a line.
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withMaxWidth(double maxWidth) {
+        setMaxWidth(maxWidth);
+        return this;
+    }
+
 
     /**
      * Gets the color used to clear the background. Can be any color format
@@ -242,6 +284,22 @@ public class SignatureField extends AbstractField<String> {
     }
 
     /**
+     * Sets the color used to clear the background. Can be any color format
+     * accepted by context.fillStyle. Defaults to "rgba(0,0,0,0)" (transparent
+     * black). Use a non-transparent color e.g. "rgb(255,255,255)" (opaque
+     * white) if you'd like to save signatures as JPEG images.<br>
+     * <br>
+     * Some predefined colors can be found in class {@link Color}
+     *
+     * @param backgroundColor Color used to clear the background.
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withBackgroundColor(String backgroundColor) {
+        setBackgroundColor(backgroundColor);
+        return this;
+    }
+
+    /**
      * Sets the color used to draw the lines. Can be any color format accepted
      * by context.fillStyle.<br>
      * <br>
@@ -264,6 +322,20 @@ public class SignatureField extends AbstractField<String> {
     public void setPenColor(String penColor) {
         getState().penColor = penColor;
     }
+    
+    /**
+     * Sets the color used to draw the lines. Can be any color format accepted
+     * by context.fillStyle.<br>
+     * <br>
+     * Some predefined colors can be found in class {@link Color}
+     *
+     * @param penColor The color used to draw the lines.
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withPenColor(String penColor) {
+        setPenColor(penColor);
+        return this;
+    }
 
     /**
      * Gets the velocity filter weight
@@ -281,6 +353,17 @@ public class SignatureField extends AbstractField<String> {
      */
     public void setVelocityFilterWeight(double velocityFilterWeight) {
         getState().velocityFilterWeight = velocityFilterWeight;
+    }
+    
+    /**
+     * Sets the velocity filter weight
+     *
+     * @param velocityFilterWeight The velocity filter weight
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withVelocityFilterWeight(double velocityFilterWeight) {
+        setVelocityFilterWeight(velocityFilterWeight);
+        return this;
     }
 
     /**
@@ -300,6 +383,17 @@ public class SignatureField extends AbstractField<String> {
     public void setMimeType(MimeType mimeType) {
         getState().mimeType = mimeType;
     }
+    
+    /**
+     * Sets the {@link MimeType} of generated images
+     *
+     * @param mimeType The {@link MimeType} of generated images
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withMimeType(MimeType mimeType) {
+        setMimeType(mimeType);
+        return this;
+    }
 
     /**
      * Gets the visibility of the clear button
@@ -318,6 +412,71 @@ public class SignatureField extends AbstractField<String> {
      */
     public void setClearButtonEnabled(boolean clearButtonEnabled) {
         getState().clearButtonEnabled = clearButtonEnabled;
+    }
+    
+    /**
+     * Sets the visibility of the clear button
+     *
+     * @param clearButtonEnabled Should show a clear button in the
+     * {@link SignatureField}
+     * @return This {@link SignatureField}
+     */
+    public SignatureField withClearButtonEnabled(boolean clearButtonEnabled) {
+        setClearButtonEnabled(clearButtonEnabled);
+        return this;
+    }
+    
+    public SignatureField withConversionError(String message) {
+        setImmediate(true);
+        setConversionError(message);
+        return this;
+    }
+
+    public SignatureField withConverter(Converter<String, ?> converter) {
+        setImmediate(true);
+        setConverter(converter);
+        return this;
+    }
+
+    public SignatureField withFullWidth() {
+        setWidth("100%");
+        return this;
+    }
+
+    public SignatureField withFullHeight() {
+        setHeight("100%");
+        return this;
+    }
+
+    public SignatureField withReadOnly(boolean readOnly) {
+        setReadOnly(readOnly);
+        return this;
+    }
+
+    public SignatureField withValidator(Validator validator) {
+        setImmediate(true);
+        addValidator(validator);
+        return this;
+    }
+
+    public SignatureField withWidth(float width, Unit unit) {
+        setWidth(width, unit);
+        return this;
+    }
+
+    public SignatureField withWidth(String width) {
+        setWidth(width);
+        return this;
+    }
+
+    public SignatureField withHeight(float height, Unit unit) {
+        setHeight(height, unit);
+        return this;
+    }
+
+    public SignatureField withHeight(String height) {
+        setHeight(height);
+        return this;
     }
 
 }

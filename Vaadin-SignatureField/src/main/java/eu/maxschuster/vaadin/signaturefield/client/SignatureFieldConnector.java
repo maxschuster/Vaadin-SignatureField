@@ -34,6 +34,7 @@ import eu.maxschuster.vaadin.signaturefield.client.signaturepad.StrokeEndEventHa
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldServerRpc;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
+import java.util.logging.Logger;
 
 /**
  * Connector of the {@link SignatureField}
@@ -42,6 +43,9 @@ import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
  */
 @Connect(SignatureField.class)
 public class SignatureFieldConnector extends AbstractFieldConnector {
+    
+    private static final Logger logger = Logger.getLogger(
+            SignatureFieldConnector.class.getName());
 
     private final ElementResizeListener elementResizeListener = 
             new ElementResizeListener() {
@@ -76,6 +80,8 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
     private String lastSendValue;
 
     private boolean changed;
+    
+    private int pendingChanges = 0;
 
     private final SignatureFieldServerRpc serverRpc =
             getRpcProxy(SignatureFieldServerRpc.class);
@@ -159,7 +165,7 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
         if (!getState().readOnly) {
             serverRpc.setTextValue(value);
             lastSendValue = value;
-            changed = false;
+            ++pendingChanges;
         }
     }
 
@@ -196,23 +202,31 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
             field.setBackgroundColor(state.backgroundColor);
         }
 
+        if (event.hasPropertyChanged("value")) {
+            if (pendingChanges > 0) {
+                --pendingChanges;
+            }
+            if (pendingChanges == 0) {
+                String stateValue = state.value;
+                if (stateValue == null || stateValue.isEmpty()) {
+                    field.getSignaturePad().clear();
+                    value = null;
+                } else {
+                    if (lastSendValue == null ||
+                            !lastSendValue.equals(stateValue)) {
+                        getWidget().fromDataURL(stateValue);
+                    }
+                }
+                value = stateValue;
+            } else {
+                logger.warning(String.valueOf(pendingChanges)
+                        .concat(" pending changes. Dropping changed value."));
+            }
+        }
+        
         if (event.hasPropertyChanged("height")
                 || event.hasPropertyChanged("width")) {
             updateCanvasSize();
-        }
-        
-        if (event.hasPropertyChanged("value")) {
-            String stateValue = state.value;
-            if (stateValue == null || stateValue.isEmpty()) {
-                field.getSignaturePad().clear();
-                value = null;
-            } else {
-                if (lastSendValue == null ||
-                        !lastSendValue.equals(stateValue)) {
-                    getWidget().fromDataURL(stateValue);
-                }
-            }
-            value = stateValue;
         }
     }
 
@@ -229,7 +243,7 @@ public class SignatureFieldConnector extends AbstractFieldConnector {
             canvas.setCoordinateSpaceWidth(newWidth);
             canvas.setCoordinateSpaceHeight(newHeight);
             if (!empty) {
-                field.getSignaturePad().fromDataURL(value);
+                field.fromDataURL(value);
             }
             sizeChanged = true;
         }

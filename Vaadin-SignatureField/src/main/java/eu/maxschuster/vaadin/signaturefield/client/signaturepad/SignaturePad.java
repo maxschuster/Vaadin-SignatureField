@@ -44,10 +44,12 @@ import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
+import eu.maxschuster.vaadin.signaturefield.client.VSignatureField;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * A GWT port of {@code SignaturePad} by
@@ -61,6 +63,9 @@ import java.util.List;
  * @author Max Schuster
  */
 public class SignaturePad implements HasHandlers {
+
+    private static final Logger logger = Logger.getLogger(
+            VSignatureField.class.getName());
 
     private final Canvas canvas;
 
@@ -140,6 +145,7 @@ public class SignaturePad implements HasHandlers {
     
     public void fromDataURL(String dataURL, final Double width,
             final Double height) {
+        reset();
         SafeUri uri = UriUtils.fromTrustedString(dataURL);
         final Image image = new Image(uri);
         image.addLoadHandler(new LoadHandler() {
@@ -160,12 +166,13 @@ public class SignaturePad implements HasHandlers {
     }
     
     public void fromDataURL(String dataURL) {
-        Double ratio = getDevicePixelWidth();
-        if (ratio == null) {
-            ratio = 1d;
-        }
-        final double width = canvas.getCoordinateSpaceWidth() / ratio;
-        final double height = canvas.getCoordinateSpaceHeight() / ratio;
+        double ratio = getDevicePixelRatio();
+        
+        double spaceWidth = canvas.getCoordinateSpaceWidth();
+        double spaceHeight = canvas.getCoordinateSpaceHeight();
+        
+        double width = spaceWidth / ratio;
+        double height = spaceHeight / ratio;
         
         fromDataURL(dataURL, width, height);
     }
@@ -437,8 +444,12 @@ public class SignaturePad implements HasHandlers {
         return (minWidth + maxWidth) / 2;
     }
     
-    protected static native Double getDevicePixelWidth() /*-{
-        return $wnd.devicePixelWidth;
+    protected static native double getDevicePixelRatio() /*-{
+        return $wnd.devicePixelRatio || 1;
+    }-*/;
+    
+    protected static native double getDevicePixelWidth() /*-{
+        return $wnd.devicePixelWidth || 1;
     }-*/;
 
     public Canvas getCanvas() {

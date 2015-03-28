@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.maxschuster.vaadin</groupId>
     <artifactId>signature-field</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <version>2.0.0.alpha1</version>
     <name>Vaadin-SignatureField - SignatureField Add-on</name>
 
     <properties>
-            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-            <vaadin.version>7.3.5</vaadin.version>
-            <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <vaadin.version>7.3.5</vaadin.version>
+        <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
-            <!-- ZIP Manifest fields -->
-            <Implementation-Version>${project.version}</Implementation-Version>
-            <!-- Must not change this because of the Directory -->
-            <Implementation-Title>${project.name}</Implementation-Title>
-            <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-            <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
-            <Vaadin-Addon>${artifactId}-${project.version}.jar</Vaadin-Addon>
+        <!-- ZIP Manifest fields -->
+        <Implementation-Version>${project.version}</Implementation-Version>
+        <!-- Must not change this because of the Directory -->
+        <Implementation-Title>${project.name}</Implementation-Title>
+        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+        <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
+        <Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
     </properties>
 
     <organization>
-            <name>Max Schuster</name>
-            <url>https://github.com/maxschuster/Vaadin-SignatureField</url>
+        <name>Max Schuster</name>
+        <url>https://github.com/maxschuster/Vaadin-SignatureField</url>
     </organization>
 
     <scm>
-            <url>https://github.com/maxschuster/Vaadin-SignatureField.git</url>
-            <connection>scm:git:https://github.com/maxschuster/Vaadin-SignatureField.git</connection>
-            <developerConnection>scm:git:ssh://git@github.com:maxschuster/Vaadin-SignatureField.git</developerConnection>
-            <tag>SignatureField add-on for Vaadin</tag>
+        <url>https://github.com/maxschuster/Vaadin-SignatureField.git</url>
+        <connection>scm:git:https://github.com/maxschuster/Vaadin-SignatureField.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:maxschuster/Vaadin-SignatureField.git</developerConnection>
+        <tag>SignatureField add-on for Vaadin</tag>
     </scm>
 
     <issueManagement>
-            <system>GitHub</system>
-            <url>https://github.com/maxschuster/Vaadin-SignatureField/issues</url>
+        <system>GitHub</system>
+        <url>https://github.com/maxschuster/Vaadin-SignatureField/issues</url>
     </issueManagement>
 
     <licenses>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>eu.maxschuster</groupId>
             <artifactId>dataurl</artifactId>
-            <version>0.1</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -200,6 +200,31 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.14.1</version>
+            </plugin>
+            
+            <!-- OSGi -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <version>2.5.3</version>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>eu.maxschuster.dataurl</Export-Package>
+                        <Export-Package>!eu.maxschuster.vaadin.signaturefield.client,eu.maxschuster.vaadin.signaturefield.*</Export-Package>
+                        <Import-Package>!com.google.gwt.*,!com.vaadin.client.*,*</Import-Package>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 

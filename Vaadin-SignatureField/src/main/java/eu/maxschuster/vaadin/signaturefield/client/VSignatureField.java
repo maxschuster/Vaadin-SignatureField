@@ -17,8 +17,6 @@ package eu.maxschuster.vaadin.signaturefield.client;
 
 import eu.maxschuster.vaadin.signaturefield.client.signaturepad.SignaturePad;
 import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,9 +25,9 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
+import java.util.logging.Logger;
 
 /**
  * Widget of the {@link SignatureField}
@@ -37,7 +35,7 @@ import eu.maxschuster.vaadin.signaturefield.SignatureField;
  * @author Max Schuster
  */
 public class VSignatureField extends FlowPanel {
-
+    
     private static final String CLASSNAME = "signaturefield";
     private static final String CLASSNAME_FOCUS = "focus";
     private static final String CLASSNAME_CLEARBUTTON =

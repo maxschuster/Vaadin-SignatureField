@@ -49,7 +49,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import eu.maxschuster.dataurl.DataUrl;
@@ -61,11 +60,7 @@ import eu.maxschuster.vaadin.signaturefield.Color;
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
-import java.io.IOException;
 import java.util.Arrays;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
 @Theme("demo")
@@ -74,33 +69,11 @@ public class DemoUI extends UI {
 
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(
-            productionMode = true,
+            productionMode = false,
             ui = DemoUI.class,
             widgetset = "eu.maxschuster.vaadin.signaturefield.demo.DemoWidgetSet"
     )
     public static class Servlet extends VaadinServlet {
-
-        @Override
-        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-            super.doPost(req, resp);
-        }
-
-        @Override
-        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-            super.doGet(req, resp);
-        }
-        
-        
         
     }
     
@@ -137,6 +110,10 @@ public class DemoUI extends UI {
         
         final VerticalLayout margin = new VerticalLayout();
         setContent(margin);
+        
+        VerticalLayout top = new VerticalLayout();
+        top.setHeight("1000px");
+        margin.addComponent(top);
 
         final VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);

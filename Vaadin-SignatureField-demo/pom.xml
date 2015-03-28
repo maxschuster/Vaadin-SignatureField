@@ -81,7 +81,7 @@
         <dependency>
             <groupId>eu.maxschuster.vaadin</groupId>
             <artifactId>signature-field</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
