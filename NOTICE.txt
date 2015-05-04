@@ -1,0 +1,8 @@
+Vaadin-SignatureField
+Copyright (c) 2015 Max Schuster
+
+This product includes software developed at
+Vaadin Ltd (https://vaadin.com).
+
+This software contains code derived from Szymon Nowak's
+signature_pad (https://github.com/szimek/signature_pad).

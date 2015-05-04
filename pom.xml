@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.maxschuster.vaadin</groupId>
-	<artifactId>Vaadin-SignatureField-root</artifactId>
+	<groupId>eu.maxschuster</groupId>
+	<artifactId>vaadin-signaturefield-root</artifactId>
 	<packaging>pom</packaging>
-	<version>2.0.0.alpha1</version>
-	<name>Vaadin-SignatureField - SignatureField Add-on Root Project</name>
+	<version>2.0.0</version>
+	<name>SignatureField (Root)</name>
 
 	<modules>
-		<module>Vaadin-SignatureField</module>
-		<module>Vaadin-SignatureField-demo</module>
+		<module>vaadin-signaturefield</module>
+		<module>vaadin-signaturefield-demo</module>
 	</modules>
 
 </project>
