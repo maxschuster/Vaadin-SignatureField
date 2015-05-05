@@ -2,14 +2,11 @@ SignatureField
 ==============
 
 A Vaadin Field (AbstractField&lt;String&gt;) to capture signatures.
-Its value is the dataURL from the html canvas as simple String.
-It uses szimek's [SignaturePad](https://github.com/szimek/signature_pad).
-
-## Warning
-This Add-on is still under development. The API may change.
+Its value is the data url from the html canvas as simple String.
+It is based on a GWT port of Szymon Nowak's [signature_pad](https://github.com/szimek/signature_pad).
 
 ## Demo
-[http://maxschuster.eu:8080/SignatureField/](http://maxschuster.eu:8080/SignatureField/)
+[http://maxschuster.jelastic.servint.net/SignatureField/](http://maxschuster.jelastic.servint.net/SignatureField/)
 
 ## Usage
 ### Simple
@@ -58,11 +55,6 @@ dataUrlProperty.addValueChangeListener(new ValueChangeListener() {
 });
 ```
 
-## TODOs
-* Improve resize handling
-* Test DataURL
-* Test field
-
 ## Licence
-
-Apache 2.0
+* SignatureField Add-on: Apache License Version 2.0
+* [signature_pad](https://github.com/szimek/signature_pad): MIT License
