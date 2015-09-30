@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+Copyright 2015 Max Schuster.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+    <head>
+        <title>DemoUILayout</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="package-mapping" content="sf:eu.maxschuster.vaadin.signaturefield" />
+    </head>
+    <body>
+    <v-vertical-layout width-full="">
+        <v-vertical-layout width="-1px" margin="" spacing="" :center>
+            <v-label _id="pageTitleLabel" style-name="h1" width="-1px" :center>
+                SignatureField
+            </v-label>
+            <v-tab-sheet width="-1px" :center >
+                <tab caption="Demo">
+                    <v-panel style-name="signature-panel">
+                        <v-vertical-layout margin="" spacing="">
+                            <sf-signature-field _id="signatureField" 
+                                    width="340px" 
+                                    height="190px" 
+                                    pen-color="#120a8f" 
+                                    background-color="white" 
+                                    velocity-filter-weight="0.7" 
+                                    :middle :center />
+                            <v-horizontal-layout width="340px" spacing="">
+                                <v-button _id="clearButton" :middle :left>
+                                    Clear
+                                </v-button>
+                                <v-label  width="-1px" :middle :center>
+                                    Sign above
+                                </v-label>
+                                <v-button _id="saveButton" :middle :right>
+                                    Save
+                                </v-button>
+                            </v-horizontal-layout>
+                            <v-accordion _id="resultsAccordion" caption="Results:">
+                                <tab caption="String Image">
+                                    <v-image _id="stringPreviewImage" width="340px" height="190px" />
+                                </tab>
+                                <tab caption="DataURL Image">
+                                    <v-image _id="dataUrlPreviewImage" width="340px" height="190px" />
+                                </tab>
+                                <tab caption="StreamResource Image">
+                                    <v-image _id="binaryPreviewImage" width="340px" height="190px" />
+                                </tab>
+                                <tab caption="DataURL String">
+                                    <v-vertical-layout width="340px" height="190px">
+                                        <v-text-area _id="dataUrlAsText" size-full="" />
+                                    </v-vertical-layout>
+                                </tab>
+                            </v-accordion>
+                            <v-label _id="emptyLabel" caption="Is Empty:" />
+                        </v-vertical-layout>
+                    </v-panel>
+                </tab>
+                <tab caption="Options">
+                    <v-panel size-full="">
+                        <v-form-layout margin="" spacing="">
+                            <v-combo-box _id="mimeTypeComboBox" item-caption-property-id="mimeType" null-selection-allowed="false" caption="Result MIME-Type" />
+                            <v-check-box _id="immediateCheckBox" caption="immediate" />
+                            <v-check-box _id="readOnlyCheckBox" caption="readOnly" />
+                            <v-check-box _id="requiredCheckBox" caption="required" />
+                            <v-check-box _id="clearButtonEnabledCheckBox" caption="clearButtonEnabled" />
+                        </v-form-layout>
+                    </v-panel>
+                </tab>
+            </v-tab-sheet>
+            <v-label style-name="h1" width="-1px" :center>
+                Links
+            </v-label>
+            <v-link caption="https://github.com/szimek/signature_pad"
+                    href="https://github.com/szimek/signature_pad"
+                    target="_blank" :center />
+            <v-link caption="https://github.com/maxschuster/Vaadin-SignatureField"
+                    href="https://github.com/maxschuster/Vaadin-SignatureField"
+                    target="_blank" :center />
+        </v-vertical-layout>
+    </v-vertical-layout>
+    </body>
+</html>

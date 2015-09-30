@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <vaadin.version>7.4.5</vaadin.version>
+        <vaadin.version>7.4.0</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
     </properties>
 
@@ -76,8 +76,8 @@
     </dependencies>
 
     <build>
+        <finalName>SignatureField</finalName>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

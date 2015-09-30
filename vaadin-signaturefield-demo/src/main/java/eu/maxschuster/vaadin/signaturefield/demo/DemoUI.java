@@ -15,6 +15,7 @@
  */
 package eu.maxschuster.vaadin.signaturefield.demo;
 
+import com.vaadin.annotations.Push;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -35,35 +36,19 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.BorderStyle;
-import com.vaadin.ui.Accordion;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.dataurl.DataUrlSerializer;
 import eu.maxschuster.dataurl.IDataUrlSerializer;
-import eu.maxschuster.vaadin.signaturefield.Color;
-import eu.maxschuster.vaadin.signaturefield.SignatureField;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import java.util.Arrays;
 
 @Theme("demo")
+@Push(PushMode.AUTOMATIC)
 public class DemoUI extends UI {
 
     @WebServlet(value = "/*", asyncSupported = true)
@@ -76,8 +61,8 @@ public class DemoUI extends UI {
         
     }
     
-    private static final String HEIGHT = "318px";
-    private static final String WIDTH = "556px";
+    private static final String HEIGHT = "190px";
+    private static final String WIDTH = "340px";
     
     private final Logger logger =
             LoggerFactory.getLogger(DemoUI.class);
@@ -91,206 +76,96 @@ public class DemoUI extends UI {
                         MimeType.PNG,
                         MimeType.JPEG
                     }));
-
-    private final IDataUrlSerializer serializer = new DataUrlSerializer();
     
-    private final String pageTitle = "SignatureField";
+    private final DemoUILayout L = new DemoUILayout();
+
+    private transient IDataUrlSerializer serializer;
 
     @Override
     protected void init(VaadinRequest request) {
         
-        getPage().setTitle(pageTitle);
+        setContent(L);
         
-        final VerticalLayout margin = new VerticalLayout();
-        margin.setWidth("100%");
-        setContent(margin);
-
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
-        layout.setSizeUndefined();
-        margin.addComponent(layout);
-        margin.setComponentAlignment(layout, Alignment.TOP_CENTER);
+        getPage().setTitle(L.pageTitleLabel.getValue());
         
-        final Label header1 = new Label(pageTitle);
-        header1.addStyleName("h1");
-        header1.setSizeUndefined();
-        layout.addComponent(header1);
-        layout.setComponentAlignment(header1, Alignment.TOP_CENTER);
+        L.signatureField.setPropertyDataSource(dataUrlProperty);
+        L.signatureField.setConverter(new StringToDataUrlConverter());
         
-        final TabSheet tabSheet = new TabSheet();
-        tabSheet.setSizeUndefined();
-        layout.addComponent(tabSheet);
-        layout.setComponentAlignment(tabSheet, Alignment.TOP_CENTER);
-
-        final Panel signaturePanel = new Panel();
-        signaturePanel.addStyleName("signature-panel");
-        tabSheet.addTab(signaturePanel, "Demo");
-        
-        final VerticalLayout signatureLayout = new VerticalLayout();
-        signatureLayout.setMargin(true);
-        signatureLayout.setSpacing(true);
-        signatureLayout.setSizeUndefined();
-        signaturePanel.setContent(signatureLayout);
-        
-        final SignatureField signatureField = new SignatureField();
-        signatureField.setWidth(WIDTH);
-        signatureField.setHeight(HEIGHT);
-        signatureField.setPenColor(Color.ULTRAMARINE);
-        signatureField.setBackgroundColor("white");
-        signatureField.setConverter(new StringToDataUrlConverter());
-        signatureField.setPropertyDataSource(dataUrlProperty);
-        signatureField.setVelocityFilterWeight(0.7);
-        signatureLayout.addComponent(signatureField);
-        signatureLayout.setComponentAlignment(
-                signatureField, Alignment.MIDDLE_CENTER);
-
-        final HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setSpacing(true);
-        buttonLayout.setWidth(WIDTH);
-        signatureLayout.addComponent(buttonLayout);
-
-        final Button clearButton = new Button("Clear", new ClickListener() {
+        L.clearButton.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                signatureField.clear();
+                L.signatureField.clear();
             }
         });
-        buttonLayout.addComponent(clearButton);
-        buttonLayout.setComponentAlignment(clearButton, Alignment.MIDDLE_LEFT);
-        
-        final Label message = new Label("Sign above");
-        message.setSizeUndefined();
-        buttonLayout.addComponent(message);
-        buttonLayout.setComponentAlignment(message, Alignment.MIDDLE_CENTER);
-        
-        final Button saveButton = new Button("Save");
-        buttonLayout.addComponent(saveButton);
-        buttonLayout.setComponentAlignment(saveButton, Alignment.MIDDLE_RIGHT);
         
         final BrowserWindowOpener saveOpener = new BrowserWindowOpener("");
         saveOpener.setWindowName("_blank");
-        saveOpener.extend(saveButton);
+        saveOpener.extend(L.saveButton);
         
-        final Panel optionsPanel = new Panel();
-        optionsPanel.setSizeFull();
-        tabSheet.addTab(optionsPanel, "Options");
+        L.mimeTypeComboBox.setContainerDataSource(mimeTypeContainer);
 
-        final FormLayout optionsLayout = new FormLayout();
-        optionsLayout.setMargin(true);
-        optionsLayout.setSpacing(true);
-        optionsPanel.setContent(optionsLayout);
-
-        final ComboBox mimeTypeComboBox = new ComboBox(null, mimeTypeContainer);
-        optionsLayout.addComponent(mimeTypeComboBox);
-        mimeTypeComboBox.setItemCaptionPropertyId("mimeType");
-        mimeTypeComboBox.setNullSelectionAllowed(false);
-        mimeTypeComboBox.addValueChangeListener(new ValueChangeListener() {
+        //l.mimeTypeComboBox.setItemCaptionPropertyId("mimeType");
+        //l.mimeTypeComboBox.setNullSelectionAllowed(false);
+        L.mimeTypeComboBox.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 MimeType mimeType = (MimeType) event.getProperty().getValue();
-                signatureField.setMimeType(mimeType);
+                L.signatureField.setMimeType(mimeType);
             }
         });
-        mimeTypeComboBox.setValue(MimeType.PNG);
-        mimeTypeComboBox.setCaption("Result MIME-Type");
+        L.mimeTypeComboBox.setValue(MimeType.PNG);
 
-        final CheckBox immediateCheckBox = new CheckBox("immediate", false);
-        optionsLayout.addComponent(immediateCheckBox);
-        immediateCheckBox.addValueChangeListener(new ValueChangeListener() {
+        L.immediateCheckBox.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean immediate = (Boolean) event.getProperty().getValue();
-                signatureField.setImmediate(immediate);
+                L.signatureField.setImmediate(immediate);
             }
         });
 
-        final CheckBox readOnlyCheckBox = new CheckBox("readOnly", false);
-        optionsLayout.addComponent(readOnlyCheckBox);
-        readOnlyCheckBox.addValueChangeListener(new ValueChangeListener() {
+        L.readOnlyCheckBox.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean readOnly = (Boolean) event.getProperty().getValue();
-                signatureField.setReadOnly(readOnly);
-                mimeTypeComboBox.setReadOnly(readOnly);
-                clearButton.setEnabled(!readOnly);
+                L.signatureField.setReadOnly(readOnly);
+                L.mimeTypeComboBox.setReadOnly(readOnly);
+                L.clearButton.setEnabled(!readOnly);
             }
         });
 
-        final CheckBox requiredCheckBox = new CheckBox(
-                "required", false);
-        optionsLayout.addComponent(requiredCheckBox);
-        requiredCheckBox.addValueChangeListener(new ValueChangeListener() {
+        L.requiredCheckBox.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean required = (Boolean) event.getProperty().getValue();
-                signatureField.setRequired(required);
+                L.signatureField.setRequired(required);
             }
         });
 
-        final CheckBox clearButtonEnabledButton = new CheckBox("clearButtonEnabled", false);
-        optionsLayout.addComponent(clearButtonEnabledButton);
-        clearButtonEnabledButton.addValueChangeListener(new ValueChangeListener() {
+        L.clearButtonEnabledCheckBox.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean clearButtonEnabled = (Boolean) event.getProperty().getValue();
-                signatureField.setClearButtonEnabled(clearButtonEnabled);
+                L.signatureField.setClearButtonEnabled(clearButtonEnabled);
             }
         });
         
-        final VerticalLayout resultsLayout = new VerticalLayout();
-        resultsLayout.setSizeUndefined();
-        signatureLayout.addComponent(resultsLayout);
-        
-        final Accordion results = new Accordion();
-        results.setCaption("Results:");
-        results.setSizeUndefined();
-        resultsLayout.addComponent(results);
+        L.dataUrlAsText.setPropertyDataSource(L.signatureField);
 
-        final Image stringPreviewImage = new Image();
-        stringPreviewImage.setWidth(WIDTH);
-        stringPreviewImage.setHeight(HEIGHT);
-        results.addComponent(stringPreviewImage);
-        results.addTab(stringPreviewImage, "String Image");
+        L.emptyLabel.setValue(String.valueOf(L.signatureField.isEmpty()));
 
-        final Image dataUrlPreviewImage = new Image();
-        dataUrlPreviewImage.setWidth(WIDTH);
-        dataUrlPreviewImage.setHeight(HEIGHT);
-        results.addTab(dataUrlPreviewImage, "DataURL Image");
-        
-        final Image binaryPreviewImage = new Image();
-        binaryPreviewImage.setWidth(WIDTH);
-        binaryPreviewImage.setHeight(HEIGHT);
-        results.addTab(binaryPreviewImage, "StreamResource Image");
-
-        final TextArea dataUrlAsText = new TextArea();
-        dataUrlAsText.setPropertyDataSource(signatureField);
-        dataUrlAsText.setSizeFull();
-        
-        CustomComponent dataUrlLabelWrapper = new CustomComponent(dataUrlAsText);
-        dataUrlLabelWrapper.setWidth(WIDTH);
-        dataUrlLabelWrapper.setHeight(HEIGHT);
-        
-        results.addTab(dataUrlLabelWrapper, "DataURL String");
-
-        final Label emptyLabel = new Label();
-        emptyLabel.setCaption("Is Empty:");
-        emptyLabel.setValue(String.valueOf(signatureField.isEmpty()));
-        signatureLayout.addComponent(emptyLabel);
-
-        signatureField.addValueChangeListener(new ValueChangeListener() {
+        L.signatureField.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 String signature = (String) event.getProperty().getValue();
-                stringPreviewImage.setSource(signature != null ? new ExternalResource(signature) : null);
-                emptyLabel.setValue(String.valueOf(signatureField.isEmpty()));
+                L.stringPreviewImage.setSource(signature != null ? new ExternalResource(signature) : null);
+                L.emptyLabel.setValue(String.valueOf(L.signatureField.isEmpty()));
             }
         });
         dataUrlProperty.addValueChangeListener(new ValueChangeListener() {
@@ -301,8 +176,8 @@ public class DemoUI extends UI {
             public void valueChange(ValueChangeEvent event) {
                 try {
                     final DataUrl signature = (DataUrl) event.getProperty().getValue();
-                    dataUrlPreviewImage.setSource( signature != null
-                            ? new ExternalResource(serializer.serialize(signature)) : null);
+                    L.dataUrlPreviewImage.setSource(signature != null
+                            ? new ExternalResource(getSerializer().serialize(signature)) : null);
                     StreamResource streamResource = null;
                     if (signature != null) {
                         StreamSource streamSource = new StreamSource() {
@@ -326,7 +201,7 @@ public class DemoUI extends UI {
                         streamResource.setCacheTime(0);
                     }
                     saveOpener.setResource(streamResource);
-                    binaryPreviewImage.setSource(streamResource);
+                    L.binaryPreviewImage.setSource(streamResource);
                 } catch (MalformedURLException e) {
                     logger.error(e.getMessage(), e);
                 } finally {
@@ -335,28 +210,14 @@ public class DemoUI extends UI {
             }
         });
         
-        results.setSelectedTab(0);
-        
-        final Label links = new Label("Links");
-        links.addStyleName("h1");
-        links.setSizeUndefined();
-        layout.addComponent(links);
-        layout.setComponentAlignment(links, Alignment.TOP_CENTER);
-        
-        final Link signaturePadLink = new Link(
-                "https://github.com/szimek/signature_pad", 
-                new ExternalResource("https://github.com/szimek/signature_pad"));
-        signaturePadLink.setTargetName("_blank");
-        layout.addComponent(signaturePadLink);
-        layout.setComponentAlignment(signaturePadLink, Alignment.TOP_CENTER);
-        
-        final Link signatureFieldLink = new Link(
-                "https://github.com/maxschuster/Vaadin-SignatureField", 
-                new ExternalResource(
-                        "https://github.com/maxschuster/Vaadin-SignatureField"));
-        signatureFieldLink.setTargetName("_blank");
-        layout.addComponent(signatureFieldLink);
-        layout.setComponentAlignment(signatureFieldLink, Alignment.TOP_CENTER);
+        L.resultsAccordion.setSelectedTab(0);
+    }
+    
+    public IDataUrlSerializer getSerializer() {
+        if (serializer == null) {
+            serializer = new DataUrlSerializer();
+        }
+        return serializer;
     }
 
 }
