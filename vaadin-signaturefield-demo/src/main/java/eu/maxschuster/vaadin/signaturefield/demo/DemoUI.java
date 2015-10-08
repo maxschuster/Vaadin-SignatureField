@@ -48,12 +48,12 @@ import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import java.util.Arrays;
 
 @Theme("demo")
-@Push(PushMode.AUTOMATIC)
+@Push
 public class DemoUI extends UI {
 
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(
-            productionMode = false,
+            productionMode = true,
             ui = DemoUI.class,
             widgetset = "eu.maxschuster.vaadin.signaturefield.demo.DemoWidgetSet"
     )
@@ -85,6 +85,13 @@ public class DemoUI extends UI {
     protected void init(VaadinRequest request) {
         
         setContent(L);
+        
+        // Set href and target manually
+        // ToDo: Move back to declarative layout when vaadin bug is fixed
+        L.signaturePadLink.setResource(new ExternalResource("https://github.com/szimek/signature_pad"));
+        L.signaturePadLink.setTargetName("_blank");
+        L.signatureFieldLink.setResource(new ExternalResource("https://github.com/maxschuster/Vaadin-SignatureField"));
+        L.signatureFieldLink.setTargetName("_blank");
         
         getPage().setTitle(L.pageTitleLabel.getValue());
         

@@ -3,7 +3,7 @@ SignatureField
 
 A Vaadin Field (AbstractField&lt;String&gt;) to capture signatures.
 Its value is the data url from the html canvas as simple String.
-It is based on a GWT port of Szymon Nowak's [signature_pad](https://github.com/szimek/signature_pad).
+It is based on Szymon Nowak's [signature_pad](https://github.com/szimek/signature_pad).
 
 ## Demo
 [http://maxschuster.jelastic.servint.net/SignatureField/](http://maxschuster.jelastic.servint.net/SignatureField/)

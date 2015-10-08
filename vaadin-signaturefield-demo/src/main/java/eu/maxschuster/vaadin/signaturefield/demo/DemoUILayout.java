@@ -22,6 +22,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
@@ -49,6 +50,8 @@ public class DemoUILayout extends VerticalLayout {
     public Image binaryPreviewImage;
     public TextArea dataUrlAsText;
     public Accordion resultsAccordion;
+    public Link signaturePadLink;
+    public Link signatureFieldLink;
     
     public DemoUILayout() {
         Design.read(this);

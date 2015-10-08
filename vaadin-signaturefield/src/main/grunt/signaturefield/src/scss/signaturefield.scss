@@ -1,0 +1,50 @@
+.signaturefield {
+    
+    background: white;
+    border: 1px solid #c5c5c5;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+
+    canvas {
+        display: block;
+    }
+
+    .v-readonly {
+        background: #fafafa;
+
+        canvas {
+            opacity: .5;
+            /* hide focus */
+            /* http://stackoverflow.com/a/8532287/1287936 */
+            outline: none;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+        }
+    }
+
+    & &-clearbutton {
+        border: none;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        color: #fff;
+        background: #ccc;
+        display: block;
+        border-radius: 50%;
+        cursor: pointer;
+        overflow: hidden;
+        padding: 0;
+        
+        &:before {
+            content: "\00D7";
+            display: block;
+            font-size: 20px;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            text-align: center;
+        }
+    }
+}

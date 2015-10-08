@@ -13,18 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.maxschuster.vaadin.signaturefield.shared;
+package eu.maxschuster.vaadin.signaturefield.shared.internal;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.JavaScriptExtensionState;
 
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
+import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 /**
  * Shared state for {@link SignatureField}
  *
  * @author Max Schuster
  */
-public class SignatureFieldState extends AbstractFieldState {
+public class SignatureFieldExtensionState extends JavaScriptExtensionState {
+    
+    /**
+     * (boolean) field is read only.
+     */
+    public boolean readOnly;
+    
+    /**
+     * (boolean) immediate is read only.
+     */
+    public boolean immediate = false;
 
     /**
      * (float or function) Radius of a single dot.
@@ -64,16 +75,11 @@ public class SignatureFieldState extends AbstractFieldState {
     /**
      * MIME-Type used to create dataURLs
      */
-    public MimeType mimeType = MimeType.PNG;
+    public String mimeType = MimeType.PNG.getMimeType();
 
     /**
      * Show a clear button in the signaturefield
      */
     public boolean clearButtonEnabled = false;
-
-    /**
-     * Value of the field
-     */
-    public String value = null;
 
 }

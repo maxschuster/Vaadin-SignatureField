@@ -15,10 +15,12 @@
  */
 package eu.maxschuster.vaadin.signaturefield;
 
+import eu.maxschuster.vaadin.signaturefield.internal.SignatureFieldExtension;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -26,8 +28,6 @@ import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
-import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldServerRpc;
-import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldState;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
@@ -39,13 +39,8 @@ import org.jsoup.nodes.Element;
  * {@link DataUrl} that allows access to the binary contents of the data url.
  * <br>
  * <br>
- * It is based on <b>signature_pad</b> by <b>Szymon Nowak
- * (<a href="https://github.com/szimek">szimek</a>)</b> that has been ported to
- * GWT.<br>
- * <br>
- * The MIT licensed original version can be found at 
- * <a href="https://github.com/szimek/signature_pad">
- * https://github.com/szimek/signature_pad</a><br>
+ * It is based on <a href="https://github.com/szimek/signature_pad">signature_pad</a>
+ * by Szymon Nowak (<a href="https://github.com/szimek">szimek</a>)
  * 
  * @author Max Schuster
  * @see StringToDataUrlConverter
@@ -53,7 +48,11 @@ import org.jsoup.nodes.Element;
  * @see <a href="https://github.com/szimek/signature_pad">
  * SignaturePad (JavaScript)</a>
  */
-public class SignatureField extends AbstractField<String> {
+public class SignatureField extends CustomField<String> {
+    
+    private final SignatureFieldExtension extension;
+    
+    private boolean changingVariables = false;
 
     /**
      * Creates a new SignatureField instance
@@ -93,13 +92,7 @@ public class SignatureField extends AbstractField<String> {
     public SignatureField(String caption, Property<?> dataSource) {
         super();
         
-        registerRpc(new SignatureFieldServerRpc() {
-
-            @Override
-            public void setTextValue(String textValue) {
-                setValue(textValue, true);
-            }
-        });
+        extension = initExtension();
 
         setImmediate(false);
         setHeight(100, Unit.PIXELS);
@@ -107,6 +100,7 @@ public class SignatureField extends AbstractField<String> {
         
         setCaption(caption);
         setPropertyDataSource(dataSource);
+        setPrimaryStyleName("signaturefield");
     }
 
     @Override
@@ -114,14 +108,51 @@ public class SignatureField extends AbstractField<String> {
         return String.class;
     }
 
+    /**
+     * Allways returns <code>null</code>
+     * @return Allways <code>null</code>
+     */
     @Override
-    protected SignatureFieldState getState() {
-        return (SignatureFieldState) super.getState();
+    protected final Component initContent() {
+        return null;
+    }
+
+    /**
+     * Allways returns <code>null</code>
+     * @return Allways <code>null</code>
+     */
+    @Override
+    protected Component getContent() {
+        return null;
+    }
+    
+    private SignatureFieldExtension initExtension() {
+        SignatureFieldExtension ext = new SignatureFieldExtension(this);
+        ext.addSignatureChangeListener(new SignatureFieldExtension.SignatureChangeListener() {
+
+            @Override
+            public void signatureChange(SignatureFieldExtension.SignatureChangeEvent event) {
+                changingVariables = true;
+                try {
+                    setValue(event.getSignature(), true);
+                } finally {
+                    changingVariables = false;
+                }
+            }
+        });
+        return ext;
     }
 
     @Override
-    protected SignatureFieldState getState(boolean markAsDirty) {
-        return (SignatureFieldState) super.getState(markAsDirty);
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+        extension.setReadOnly(readOnly);
+    }
+
+    @Override
+    public void setImmediate(boolean immediate) {
+        super.setImmediate(immediate);
+        extension.setImmediate(immediate);
     }
 
     /**
@@ -137,18 +168,13 @@ public class SignatureField extends AbstractField<String> {
     }
 
     @Override
-    public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
-        if (initial) {
-            getState().value = getValue();
-        }
-    }
-
-    @Override
     protected void setInternalValue(String newValue) {
+        setInternalValue(newValue, false);
+    }
+    
+    protected void setInternalValue(String newValue, boolean repaintIsNotNeeded) {
         super.setInternalValue(newValue);
-        // Update the state value without causing a redraw
-        getState(false).value = newValue;
+        extension.setSignature(newValue, changingVariables || repaintIsNotNeeded);
     }
 
     /**
@@ -208,7 +234,7 @@ public class SignatureField extends AbstractField<String> {
      * @return Radius of a single dot.
      */
     public Double getDotSize() {
-        return getState(false).dotSize;
+        return extension.getDotSize();
     }
 
     /**
@@ -217,7 +243,7 @@ public class SignatureField extends AbstractField<String> {
      * @param dotSize Radius of a single dot.
      */
     public void setDotSize(Double dotSize) {
-        getState().dotSize = dotSize;
+        extension.setDotSize(dotSize);
     }
 
     /**
@@ -227,7 +253,7 @@ public class SignatureField extends AbstractField<String> {
      * @return This {@link SignatureField}
      */
     public SignatureField withDotSize(Double dotSize) {
-        getState().dotSize = dotSize;
+        extension.setDotSize(dotSize);
         return this;
     }
 
@@ -237,7 +263,7 @@ public class SignatureField extends AbstractField<String> {
      * @return Minimum width of a line.
      */
     public double getMinWidth() {
-        return getState(false).minWidth;
+        return extension.getMinWidth();
     }
 
     /**
@@ -246,7 +272,7 @@ public class SignatureField extends AbstractField<String> {
      * @param minWidth Minimum width of a line.
      */
     public void setMinWidth(double minWidth) {
-        getState().minWidth = minWidth;
+        extension.setMinWidth(minWidth);
     }
 
     /**
@@ -266,7 +292,7 @@ public class SignatureField extends AbstractField<String> {
      * @return Maximum width of a line.
      */
     public double getMaxWidth() {
-        return getState(false).maxWidth;
+        return extension.getMaxWidth();
     }
 
     /**
@@ -275,7 +301,7 @@ public class SignatureField extends AbstractField<String> {
      * @param maxWidth Maximum width of a line.
      */
     public void setMaxWidth(double maxWidth) {
-        getState().maxWidth = maxWidth;
+        extension.setMaxWidth(maxWidth);
     }
 
     /**
@@ -301,7 +327,7 @@ public class SignatureField extends AbstractField<String> {
      * @return Color used to clear the background.
      */
     public String getBackgroundColor() {
-        return getState(false).backgroundColor;
+        return extension.getBackgroundColor();
     }
 
     /**
@@ -315,7 +341,7 @@ public class SignatureField extends AbstractField<String> {
      * @param backgroundColor Color used to clear the background.
      */
     public void setBackgroundColor(String backgroundColor) {
-        getState().backgroundColor = backgroundColor;
+        extension.setBackgroundColor(backgroundColor);
     }
 
     /**
@@ -343,7 +369,7 @@ public class SignatureField extends AbstractField<String> {
      * @return The color used to draw the lines.
      */
     public String getPenColor() {
-        return getState(false).penColor;
+        return extension.getPenColor();
     }
 
     /**
@@ -355,7 +381,7 @@ public class SignatureField extends AbstractField<String> {
      * @param penColor The color used to draw the lines.
      */
     public void setPenColor(String penColor) {
-        getState().penColor = penColor;
+        extension.setPenColor(penColor);
     }
     
     /**
@@ -378,7 +404,7 @@ public class SignatureField extends AbstractField<String> {
      * @return The velocity filter weight
      */
     public double getVelocityFilterWeight() {
-        return getState(false).velocityFilterWeight;
+        return extension.getVelocityFilterWeight();
     }
 
     /**
@@ -387,7 +413,7 @@ public class SignatureField extends AbstractField<String> {
      * @param velocityFilterWeight The velocity filter weight
      */
     public void setVelocityFilterWeight(double velocityFilterWeight) {
-        getState().velocityFilterWeight = velocityFilterWeight;
+        extension.setVelocityFilterWeight(velocityFilterWeight);
     }
     
     /**
@@ -407,7 +433,7 @@ public class SignatureField extends AbstractField<String> {
      * @return The {@link MimeType} of generated images
      */
     public MimeType getMimeType() {
-        return getState(false).mimeType;
+        return extension.getMimeType();
     }
 
     /**
@@ -416,7 +442,7 @@ public class SignatureField extends AbstractField<String> {
      * @param mimeType The {@link MimeType} of generated images
      */
     public void setMimeType(MimeType mimeType) {
-        getState().mimeType = mimeType;
+        extension.setMimeType(mimeType);
     }
     
     /**
@@ -436,7 +462,7 @@ public class SignatureField extends AbstractField<String> {
      * @return Should show a clear button in the {@link SignatureField}
      */
     public boolean isClearButtonEnabled() {
-        return getState(false).clearButtonEnabled;
+        return extension.isClearButtonEnabled();
     }
 
     /**
@@ -446,7 +472,7 @@ public class SignatureField extends AbstractField<String> {
      * {@link SignatureField}
      */
     public void setClearButtonEnabled(boolean clearButtonEnabled) {
-        getState().clearButtonEnabled = clearButtonEnabled;
+        extension.setClearButtonEnabled(clearButtonEnabled);
     }
     
     /**
