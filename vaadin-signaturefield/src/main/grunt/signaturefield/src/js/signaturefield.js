@@ -46,7 +46,7 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
             signaturePad.fromDataURL(newSignature);
         }
     };
-    
+
     this.findAndExtendParent = function () {
         var parent = this.getElement(this.getParentId());
         parent.tabIndex = -1;
@@ -68,7 +68,7 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
                 signaturePad = this.signaturePad,
                 width = parseInt(style.width),
                 height = parseInt(style.height);
-        
+
         canvas.width = width;
         canvas.height = height;
 
@@ -84,13 +84,13 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
         signaturePad.onBegin = this.proxy(this.onStrokeBegin);
         signaturePad.onEnd = this.proxy(this.onStrokeEnd);
         signaturePad.vReadOnly = false;
-        
+
         // Remove window.devicePixelRatio
         signaturePad.fromDataURL = function (dataUrl) {
             var self = this,
-                image = new Image(),
-                width = this._canvas.width,
-                height = this._canvas.height;
+                    image = new Image(),
+                    width = this._canvas.width,
+                    height = this._canvas.height;
 
             this._reset();
             image.src = dataUrl;
@@ -99,7 +99,7 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
             };
             this._isEmpty = false;
         };
-        
+
         return signaturePad;
     };
 
@@ -114,7 +114,7 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
     this.onResize = function () {
         this.updateCanvasSize();
     };
-    
+
     this.onStrokeBegin = function () {
         this.parent.focus();
     };
@@ -160,7 +160,7 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
         signaturePad.backgroundColor = state.backgroundColor;
         signaturePad.penColor = state.penColor;
         signaturePad.velocityFilterWeight = state.velocityFilterWeight;
-        
+
         this.mimeType = state.mimeType;
         this.immediate = state.immediate;
 
@@ -174,7 +174,7 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
             parent.tabIndex = -1;
         }
         signaturePad.vReadOnly = readOnly;
-        
+
         if ((!readOnly && state.clearButtonEnabled) && !this.clearButton) {
             this.clearButton = this.createCloseButton(parent);
         } else if ((readOnly || !state.clearButtonEnabled) && this.clearButton) {
@@ -186,7 +186,8 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
 
     this.getCurrentSignature = function () {
         var signaturePad = this.signaturePad;
-        return signaturePad.isEmpty() ? null : signaturePad.toDataURL();
+        return signaturePad.isEmpty() ?
+                null : signaturePad.toDataURL(this.mimeType, 1);
     };
 
     this.updateSignature = function (signature) {
