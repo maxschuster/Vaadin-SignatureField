@@ -48,10 +48,10 @@ import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import java.util.Arrays;
 
 @Theme("demo")
-@Push
+@Push(PushMode.DISABLED)
 public class DemoUI extends UI {
 
-    @WebServlet(value = "/*", asyncSupported = true)
+    @WebServlet(value = "/*", asyncSupported = false)
     @VaadinServletConfiguration(
             productionMode = true,
             ui = DemoUI.class,
