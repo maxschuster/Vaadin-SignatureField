@@ -379,7 +379,6 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
                 e--;
             }
         }
-        existing.push(clazz);
         el.setAttribute("class", existing.join(" "));
     };
 
