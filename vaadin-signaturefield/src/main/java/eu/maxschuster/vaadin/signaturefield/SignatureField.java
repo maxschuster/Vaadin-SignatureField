@@ -39,19 +39,25 @@ import org.jsoup.nodes.Element;
  * {@link DataUrl} that allows access to the binary contents of the data url.
  * <br>
  * <br>
- * It is based on <a href="https://github.com/szimek/signature_pad">signature_pad</a>
- * by Szymon Nowak (<a href="https://github.com/szimek">szimek</a>)
+ * <a href="https://github.com/szimek/signature_pad">signature_pad</a> 
+ * by Szymon Nowak (<a href="https://github.com/szimek">szimek</a>) is used to
+ * capture the signature at the client-side.
  * 
  * @author Max Schuster
  * @see StringToDataUrlConverter
  * @see DataUrl
- * @see <a href="https://github.com/szimek/signature_pad">
- * SignaturePad (JavaScript)</a>
+ * @see <a href="https://github.com/szimek/signature_pad">signature_pad</a>
  */
 public class SignatureField extends CustomField<String> {
     
+    /**
+     * The extension instance
+     */
     private final SignatureFieldExtension extension;
     
+    /**
+     * True if client-side is updating the signature
+     */
     private boolean changingVariables = false;
 
     /**
@@ -126,6 +132,11 @@ public class SignatureField extends CustomField<String> {
         return null;
     }
     
+    /**
+     * Creates the javascript extension used to communicate with the
+     * client-side.
+     * @return The extension of this field
+     */
     private SignatureFieldExtension initExtension() {
         SignatureFieldExtension ext = new SignatureFieldExtension(this);
         ext.addSignatureChangeListener(new SignatureFieldExtension.SignatureChangeListener() {
@@ -167,11 +178,25 @@ public class SignatureField extends CustomField<String> {
         return super.isEmpty();
     }
 
+    /**
+     * Sets the internal field value. Sends the value to the client-side.
+     * 
+     * @param newValue
+     *            the new value to be set.
+     */
     @Override
     protected void setInternalValue(String newValue) {
         setInternalValue(newValue, false);
     }
     
+    /**
+     * Sets the internal field value. May sends the value to the client-side.
+     * 
+     * @param newValue
+     *            the new value to be set.
+     * @param repaintIsNotNeeded
+     *            the new value should not be send to the client-side
+     */
     protected void setInternalValue(String newValue, boolean repaintIsNotNeeded) {
         super.setInternalValue(newValue);
         extension.setSignature(newValue, changingVariables || repaintIsNotNeeded);

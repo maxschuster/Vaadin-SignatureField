@@ -16,44 +16,44 @@
 package eu.maxschuster.vaadin.signaturefield.shared.internal;
 
 import com.vaadin.shared.JavaScriptExtensionState;
+import eu.maxschuster.vaadin.signaturefield.internal.SignatureFieldExtension;
 
-import eu.maxschuster.vaadin.signaturefield.SignatureField;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 /**
- * Shared state for {@link SignatureField}
+ * Shared state for {@link SignatureFieldExtension}
  *
  * @author Max Schuster
  */
 public class SignatureFieldExtensionState extends JavaScriptExtensionState {
     
     /**
-     * (boolean) field is read only.
+     * Extension is read only.
      */
     public boolean readOnly;
     
     /**
-     * (boolean) immediate is read only.
+     * Extension is immediate.
      */
     public boolean immediate = false;
 
     /**
-     * (float or function) Radius of a single dot.
+     * Radius of a single dot.
      */
     public Double dotSize;
 
     /**
-     * (float) Minimum width of a line. Defaults to 0.5.
+     * Minimum width of a line. Defaults to 0.5.
      */
     public double minWidth = .5f;
 
     /**
-     * (float) Maximum width of a line. Defaults to 2.5.
+     * Maximum width of a line. Defaults to 2.5.
      */
     public double maxWidth = 2.5f;
 
     /**
-     * (string) Color used to clear the background. Can be any color format
+     * Color used to clear the background. Can be any color format
      * accepted by context.fillStyle. Defaults to "rgba(0,0,0,0)" (transparent
      * black). Use a non-transparent color e.g. "rgb(255,255,255)" (opaque
      * white) if you'd like to save signatures as JPEG images.
@@ -61,13 +61,13 @@ public class SignatureFieldExtensionState extends JavaScriptExtensionState {
     public String backgroundColor = "rgba(0,0,0,0)";
 
     /**
-     * (string) Color used to draw the lines. Can be any color format accepted
+     * Color used to draw the lines. Can be any color format accepted
      * by context.fillStyle. Defaults to "black".
      */
     public String penColor = "black";
 
     /**
-     * (float) Weight used to modify new velocity based on the previous
+     * Weight used to modify new velocity based on the previous
      * velocity. Defaults to 0.7.
      */
     public double velocityFilterWeight = .7f;

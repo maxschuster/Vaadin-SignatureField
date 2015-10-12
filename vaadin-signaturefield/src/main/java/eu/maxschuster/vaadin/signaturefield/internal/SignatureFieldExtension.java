@@ -23,7 +23,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.util.ReflectTools;
 import elemental.json.JsonArray;
-import elemental.json.JsonObject;
 import elemental.json.JsonString;
 import elemental.json.JsonValue;
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
@@ -33,15 +32,27 @@ import java.lang.reflect.Method;
 import eu.maxschuster.vaadin.signaturefield.Color;
 
 /**
- *
- * @author Max
+ * A javascript extension that extends a {@link SignatureField} with the
+ * client-side logic.
+ * 
+ * <a href="https://github.com/szimek/signature_pad">signature_pad</a> 
+ * by Szymon Nowak (<a href="https://github.com/szimek">szimek</a>) is used to
+ * capture the signature at the client-side.
+ * @author Max Schuster
+ * @see <a href="https://github.com/szimek/signature_pad">signature_pad</a>
  */
 @JavaScript("vaadin://addons/signaturefield/dist/SignatureFieldExtension.min.js")
 @StyleSheet("vaadin://addons/signaturefield/dist/SignatureFieldExtension.css")
 public class SignatureFieldExtension extends AbstractJavaScriptExtension {
     
+    /**
+     * Current signature value
+     */
     private String signature;
     
+    /**
+     * Listener that gets called when the signature changes
+     */
     public interface SignatureChangeListener {
         
         public static final Method METHOD = ReflectTools.findMethod(
@@ -52,6 +63,9 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
         
     }
     
+    /**
+     * A signature change event
+     */
     public static class SignatureChangeEvent extends Component.Event {
         
         private final SignatureFieldExtension extension;
@@ -65,10 +79,16 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
             this.signature = signature;
         }
 
+        /**
+         * @return The extension that has fired this event
+         */
         public SignatureFieldExtension getExtension() {
             return extension;
         }
 
+        /**
+         * @return The new signature value
+         */
         public String getSignature() {
             return signature;
         }
@@ -76,8 +96,13 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
     }
 
     public SignatureFieldExtension(SignatureField target) {
+        // extend the target
         super(target);
         
+        /*
+         * Gets called from the client-side when it wants to change the signatue
+         * value at the server-side.
+         */
         addFunction("fireSignatureChange", new JavaScriptFunction() {
 
             @Override
@@ -120,12 +145,15 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
         callFunction("setSignature", getSignature());
     }
     
+    /**
+     * @return Current signature value
+     */
     public String getSignature() {
         return signature;
     }
     
     /**
-     * Set signature current signature value
+     * Set signature current signature value.
      * @param signature Signature
      * @param repaintIsNotNeeded Repaint is not needed
      */
@@ -139,34 +167,66 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
         }
     }
     
+    /**
+     * Set signature current signature value.
+     * @param signature Signature
+     */
     public void setSignature(String signature) {
         setSignature(signature, false);
     }
     
+    /**
+     * Fires a new {@link SignatureChangeEvent} with the given Signature.
+     * @param signature New signature
+     */
     public void fireSignatureChangeEvent(String signature) {
         fireEvent(new SignatureChangeEvent((Component) getParent(), this, signature));
     }
     
+    /**
+     * Adds a {@link SignatureChangeListener}.
+     * @param listener Listener to add
+     */
     public void addSignatureChangeListener(SignatureChangeListener listener) {
         addListener(SignatureChangeEvent.class, listener, SignatureChangeListener.METHOD);
     }
     
+    /**
+     * Removes a {@link SignatureChangeListener}.
+     * @param listener Listener to remove
+     */
     public void removeSignatureChangeListener(SignatureChangeListener listener) {
         removeListener(SignatureChangeEvent.class, listener, SignatureChangeListener.METHOD);
     }
     
+    /**
+     * Returns true if the extension is immediate.
+     * @return Extension is immediate.
+     */
     public boolean getImmediate() {
         return getState(false).immediate;
     }
     
+    /**
+     * Sets the immediate value of this extension.
+     * @param immediate New immediate value of this extension.
+     */
     public void setImmediate(boolean immediate) {
         getState().immediate = immediate;
     }
     
+    /**
+     * Returns true if extension is read only.
+     * @return Extension is read only.
+     */
     public boolean getReadOnly() {
         return getState(false).readOnly;
     }
     
+    /**
+     * Sets the read only value of this extension.
+     * @param readOnly Extension is read only.
+     */
     public void setReadOnly(boolean readOnly) {
         getState().readOnly = readOnly;
     }
