@@ -199,7 +199,7 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
-                <version>2.5.4</version>
+                <version>3.0.0</version>
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
