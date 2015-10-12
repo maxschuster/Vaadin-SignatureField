@@ -36,8 +36,8 @@ import eu.maxschuster.vaadin.signaturefield.Color;
  *
  * @author Max
  */
-@JavaScript("vaadin://addons/signaturefield/dist/signaturefield.min.js")
-@StyleSheet("vaadin://addons/signaturefield/dist/signaturefield.css")
+@JavaScript("vaadin://addons/signaturefield/dist/SignatureFieldExtension.min.js")
+@StyleSheet("vaadin://addons/signaturefield/dist/SignatureFieldExtension.css")
 public class SignatureFieldExtension extends AbstractJavaScriptExtension {
     
     private String signature;

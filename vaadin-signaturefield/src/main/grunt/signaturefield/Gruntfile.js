@@ -43,7 +43,7 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     'node_modules/signature_pad/signature_pad.js',
-                    'src/js/signaturefield.js'
+                    'src/js/<%= pkg.name %>.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.js'
             }
