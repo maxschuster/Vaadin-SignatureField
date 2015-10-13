@@ -301,6 +301,7 @@ function eu_maxschuster_vaadin_signaturefield_internal_SignatureFieldExtension()
                 newSignature = arguments.length > 0 ?
                 signature : this.getCurrentSignature();
         if (newSignature !== oldSignature) {
+            this.signature = newSignature;
             this.fireSignatureChange(newSignature);
         }
     };
