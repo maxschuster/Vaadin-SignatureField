@@ -5,7 +5,7 @@
     <groupId>eu.maxschuster</groupId>
     <artifactId>vaadin-signaturefield-demo</artifactId>
     <packaging>war</packaging>
-    <version>2.0.0</version>
+    <version>1.0.0</version>
     <name>SignatureField (Demo)</name>
 
     <properties>
@@ -88,7 +88,6 @@
     </dependencies>
 
     <build>
-        <finalName>SignatureField</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
