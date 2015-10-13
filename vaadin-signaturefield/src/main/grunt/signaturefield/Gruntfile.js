@@ -78,7 +78,8 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 banner: '<%= banner %>',
-                sourceMap: true
+                sourceMap: true,
+                preserveComments: 'some'
             },
             dist: {
                 src: '<%= concat.dist.src %>',
