@@ -15,7 +15,6 @@
  */
 package eu.maxschuster.vaadin.signaturefield;
 
-import eu.maxschuster.vaadin.signaturefield.internal.SignatureFieldExtension;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;

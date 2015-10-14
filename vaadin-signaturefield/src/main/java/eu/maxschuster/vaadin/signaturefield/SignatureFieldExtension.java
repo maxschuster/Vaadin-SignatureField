@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.maxschuster.vaadin.signaturefield.internal;
+package eu.maxschuster.vaadin.signaturefield;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
@@ -25,11 +25,9 @@ import com.vaadin.util.ReflectTools;
 import elemental.json.JsonArray;
 import elemental.json.JsonString;
 import elemental.json.JsonValue;
-import eu.maxschuster.vaadin.signaturefield.SignatureField;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
-import eu.maxschuster.vaadin.signaturefield.shared.internal.SignatureFieldExtensionState;
+import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldExtensionState;
 import java.lang.reflect.Method;
-import eu.maxschuster.vaadin.signaturefield.Color;
 
 /**
  * A javascript extension that extends a {@link SignatureField} with the

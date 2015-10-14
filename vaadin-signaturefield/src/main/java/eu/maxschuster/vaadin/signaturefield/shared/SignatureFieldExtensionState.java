@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.maxschuster.vaadin.signaturefield.shared.internal;
+package eu.maxschuster.vaadin.signaturefield.shared;
 
 import com.vaadin.shared.JavaScriptExtensionState;
-import eu.maxschuster.vaadin.signaturefield.internal.SignatureFieldExtension;
-
-import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
+import eu.maxschuster.vaadin.signaturefield.SignatureFieldExtension;
 
 /**
  * Shared state for {@link SignatureFieldExtension}
