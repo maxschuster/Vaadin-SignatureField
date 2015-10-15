@@ -6,7 +6,10 @@
     <artifactId>vaadin-signaturefield</artifactId>
     <packaging>bundle</packaging>
     <version>1.0.0</version>
+    
     <name>SignatureField</name>
+    <description>Vaadin field to capture signatures.</description>
+    <url>https://github.com/maxschuster/Vaadin-SignatureField</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,17 +30,26 @@
         <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
         <Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
     </properties>
-
+    
     <organization>
         <name>Max Schuster</name>
-        <url>https://github.com/maxschuster/Vaadin-SignatureField</url>
+        <url>https://github.com/maxschuster/</url>
     </organization>
+    
+    <developers>
+        <developer>
+            <name>Max Schuster</name>
+            <email>dev@maxschuster.eu</email>
+            <url>https://github.com/maxschuster</url>
+            <id>maxschuster</id>
+        </developer>
+    </developers>
 
     <scm>
         <url>https://github.com/maxschuster/Vaadin-SignatureField.git</url>
         <connection>scm:git:https://github.com/maxschuster/Vaadin-SignatureField.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:maxschuster/Vaadin-SignatureField.git</developerConnection>
-        <tag>SignatureField add-on for Vaadin</tag>
+        <tag>${project.version}}</tag>
     </scm>
 
     <issueManagement>
@@ -52,6 +64,17 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -227,6 +250,34 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.5</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            
         </plugins>
 
         <!-- This is needed for the sources required by the client-side compiler to be 
