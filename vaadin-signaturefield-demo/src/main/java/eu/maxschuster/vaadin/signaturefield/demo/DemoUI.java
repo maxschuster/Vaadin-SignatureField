@@ -15,6 +15,7 @@
  */
 package eu.maxschuster.vaadin.signaturefield.demo;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -28,8 +29,6 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.StreamResource;
@@ -39,19 +38,26 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.dataurl.DataUrlSerializer;
 import eu.maxschuster.dataurl.IDataUrlSerializer;
+import eu.maxschuster.vaadin.colorpickerfield.converter.ColorToRgbaConverter;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Theme("demo")
+@PreserveOnRefresh
 @Push(PushMode.DISABLED)
 public class DemoUI extends UI {
+            
+    private static final long serialVersionUID = 1L;
 
-    @WebServlet(value = "/*", asyncSupported = false)
+    @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(
             productionMode = true,
             ui = DemoUI.class,
@@ -59,13 +65,9 @@ public class DemoUI extends UI {
     )
     public static class Servlet extends VaadinServlet {
         
+        private static final long serialVersionUID = 1L;
+            
     }
-    
-    private static final String HEIGHT = "190px";
-    private static final String WIDTH = "340px";
-    
-    private final Logger logger =
-            LoggerFactory.getLogger(DemoUI.class);
 
     private final ObjectProperty<DataUrl> dataUrlProperty
             = new ObjectProperty<DataUrl>(null, DataUrl.class);
@@ -77,105 +79,202 @@ public class DemoUI extends UI {
                         MimeType.JPEG
                     }));
     
-    private final DemoUILayout L = new DemoUILayout();
+    private final DemoUILayout l = new DemoUILayout();
 
-    private transient IDataUrlSerializer serializer;
+    private IDataUrlSerializer serializer;
 
     @Override
     protected void init(VaadinRequest request) {
-        
-        setContent(L);
+        setContent(l);
         
         // Set href and target manually
         // ToDo: Move back to declarative layout when vaadin bug is fixed
-        L.signaturePadLink.setResource(new ExternalResource("https://github.com/szimek/signature_pad"));
-        L.signaturePadLink.setTargetName("_blank");
-        L.signatureFieldLink.setResource(new ExternalResource("https://github.com/maxschuster/Vaadin-SignatureField"));
-        L.signatureFieldLink.setTargetName("_blank");
+        l.signaturePadLink.setResource(new ExternalResource(
+                "https://github.com/szimek/signature_pad"));
+        l.signaturePadLink.setTargetName("_blank");
+        l.signatureFieldLink.setResource(new ExternalResource(
+                "https://github.com/maxschuster/Vaadin-SignatureField"));
+        l.signatureFieldLink.setTargetName("_blank");
         
-        getPage().setTitle(L.pageTitleLabel.getValue());
+        getPage().setTitle(l.pageTitleLabel.getValue());
         
-        L.signatureField.setPropertyDataSource(dataUrlProperty);
-        L.signatureField.setConverter(new StringToDataUrlConverter());
+        l.signatureField.setBackgroundColor("rgba(255,255,255, 1)");
+        l.signatureField.setPenColor("rgba(18, 10, 143, 1)");
+        l.signatureField.setPropertyDataSource(dataUrlProperty);
+        l.signatureField.setConverter(new StringToDataUrlConverter());
         
-        L.clearButton.addClickListener(new ClickListener() {
-
+        l.clearButton.addClickListener(new ClickListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
             @Override
             public void buttonClick(ClickEvent event) {
-                L.signatureField.clear();
+                l.signatureField.clear();
             }
         });
         
         final BrowserWindowOpener saveOpener = new BrowserWindowOpener("");
         saveOpener.setWindowName("_blank");
-        saveOpener.extend(L.saveButton);
+        saveOpener.extend(l.saveButton);
         
-        L.mimeTypeComboBox.setContainerDataSource(mimeTypeContainer);
+        l.mimeTypeComboBox.setContainerDataSource(mimeTypeContainer);
 
         //l.mimeTypeComboBox.setItemCaptionPropertyId("mimeType");
         //l.mimeTypeComboBox.setNullSelectionAllowed(false);
-        L.mimeTypeComboBox.addValueChangeListener(new ValueChangeListener() {
+        l.mimeTypeComboBox.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 MimeType mimeType = (MimeType) event.getProperty().getValue();
-                L.signatureField.setMimeType(mimeType);
+                l.signatureField.setMimeType(mimeType);
             }
         });
-        L.mimeTypeComboBox.setValue(MimeType.PNG);
+        l.mimeTypeComboBox.setValue(l.signatureField.getMimeType());
+        
+        l.dotSizeTextField.setConverter(Double.class);
+        l.dotSizeTextField.setNullSettingAllowed(true);
+        l.dotSizeTextField.setConvertedValue(l.signatureField.getDotSize());
+        l.dotSizeTextField.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                l.signatureField.setDotSize((Double) l.dotSizeTextField.getConvertedValue());
+            }
+        });
+        
+        l.minWidthTextField.setConverter(Double.class);
+        l.minWidthTextField.setConvertedValue(l.signatureField.getMinWidth());
+        l.minWidthTextField.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                l.signatureField.setMinWidth((Double) l.minWidthTextField.getConvertedValue());
+            }
+        });
+        
+        l.maxWidthTextField.setConverter(Double.class);
+        l.maxWidthTextField.setConvertedValue(l.signatureField.getMaxWidth());
+        l.maxWidthTextField.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                l.signatureField.setMaxWidth((Double) l.maxWidthTextField.getConvertedValue());
+            }
+        });
+        
+        l.velocityFilterWeightTextField.setConverter(Double.class);
+        l.velocityFilterWeightTextField.setConvertedValue(l.signatureField.getVelocityFilterWeight());
+        l.velocityFilterWeightTextField.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                l.signatureField.setVelocityFilterWeight((Double) l.velocityFilterWeightTextField.getConvertedValue());
+            }
+        });
+        
+        l.backgroundColorColorPicker.setConverter(new ColorToRgbaConverter());
+        l.backgroundColorColorPicker.setConvertedValue(l.signatureField.getBackgroundColor());
+        l.backgroundColorColorPicker.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                l.signatureField.setBackgroundColor((String)l.backgroundColorColorPicker.getConvertedValue());
+                Notification.show(
+                        "The background color will change after\n"
+                                + "you have cleared the signature field!",
+                        Notification.Type.WARNING_MESSAGE
+                );
+            }
+        });
+        
+        l.penColorColorPicker.setConverter(new ColorToRgbaConverter());
+        l.penColorColorPicker.setConvertedValue(l.signatureField.getPenColor());
+        l.penColorColorPicker.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                l.signatureField.setPenColor((String)l.penColorColorPicker.getConvertedValue());
+            }
+        });
 
-        L.immediateCheckBox.addValueChangeListener(new ValueChangeListener() {
+        l.immediateCheckBox.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
 
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean immediate = (Boolean) event.getProperty().getValue();
-                L.signatureField.setImmediate(immediate);
+                l.signatureField.setImmediate(immediate);
             }
         });
 
-        L.readOnlyCheckBox.addValueChangeListener(new ValueChangeListener() {
-
+        l.readOnlyCheckBox.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean readOnly = (Boolean) event.getProperty().getValue();
-                L.signatureField.setReadOnly(readOnly);
-                L.mimeTypeComboBox.setReadOnly(readOnly);
-                L.clearButton.setEnabled(!readOnly);
+                l.signatureField.setReadOnly(readOnly);
+                l.mimeTypeComboBox.setReadOnly(readOnly);
+                l.clearButton.setEnabled(!readOnly);
             }
         });
 
-        L.requiredCheckBox.addValueChangeListener(new ValueChangeListener() {
-
+        l.requiredCheckBox.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean required = (Boolean) event.getProperty().getValue();
-                L.signatureField.setRequired(required);
+                l.signatureField.setRequired(required);
             }
         });
 
-        L.clearButtonEnabledCheckBox.addValueChangeListener(new ValueChangeListener() {
-
+        l.clearButtonEnabledCheckBox.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
             @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean clearButtonEnabled = (Boolean) event.getProperty().getValue();
-                L.signatureField.setClearButtonEnabled(clearButtonEnabled);
+                l.signatureField.setClearButtonEnabled(clearButtonEnabled);
             }
         });
         
-        L.dataUrlAsText.setPropertyDataSource(L.signatureField);
+        l.dataUrlAsText.setPropertyDataSource(l.signatureField);
 
-        L.emptyLabel.setValue(String.valueOf(L.signatureField.isEmpty()));
+        l.emptyLabel.setValue(String.valueOf(l.signatureField.isEmpty()));
 
-        L.signatureField.addValueChangeListener(new ValueChangeListener() {
-
+        l.signatureField.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
+            
             @Override
             public void valueChange(ValueChangeEvent event) {
                 String signature = (String) event.getProperty().getValue();
-                L.stringPreviewImage.setSource(signature != null ? new ExternalResource(signature) : null);
-                L.emptyLabel.setValue(String.valueOf(L.signatureField.isEmpty()));
+                l.stringPreviewImage.setSource(signature != null ? new ExternalResource(signature) : null);
+                l.emptyLabel.setValue(String.valueOf(l.signatureField.isEmpty()));
             }
         });
         dataUrlProperty.addValueChangeListener(new ValueChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
             
             private int counter = 0;
 
@@ -183,12 +282,14 @@ public class DemoUI extends UI {
             public void valueChange(ValueChangeEvent event) {
                 try {
                     final DataUrl signature = (DataUrl) event.getProperty().getValue();
-                    L.dataUrlPreviewImage.setSource(signature != null
+                    l.dataUrlPreviewImage.setSource(signature != null
                             ? new ExternalResource(getSerializer().serialize(signature)) : null);
                     StreamResource streamResource = null;
                     if (signature != null) {
                         StreamSource streamSource = new StreamSource() {
-
+            
+                            private static final long serialVersionUID = 1L;
+            
                             @Override
                             public InputStream getStream() {
                                 return new ByteArrayInputStream(signature.getData());
@@ -208,16 +309,17 @@ public class DemoUI extends UI {
                         streamResource.setCacheTime(0);
                     }
                     saveOpener.setResource(streamResource);
-                    L.binaryPreviewImage.setSource(streamResource);
+                    l.binaryPreviewImage.setSource(streamResource);
                 } catch (MalformedURLException e) {
-                    logger.error(e.getMessage(), e);
+                    Logger.getLogger(DemoUI.class.getName()).log(
+                            Level.SEVERE, e.getLocalizedMessage(), e);
                 } finally {
                     counter++;
                 }
             }
         });
         
-        L.resultsAccordion.setSelectedTab(0);
+        l.resultsAccordion.setSelectedTab(0);
     }
     
     public IDataUrlSerializer getSerializer() {

@@ -20,7 +20,7 @@ package eu.maxschuster.vaadin.signaturefield;
  * 
  * @author Max Schuster
  */
-public class Color {
+public class SampleColors {
     
     /**
      * The color white

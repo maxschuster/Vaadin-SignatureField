@@ -96,10 +96,17 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+        <!-- Add servlet api to tests so NoClassDefFoundErrors are thrown -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>eu.maxschuster</groupId>
             <artifactId>dataurl</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
 

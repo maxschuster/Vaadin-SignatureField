@@ -27,6 +27,8 @@ import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
+import java.util.Collection;
+import java.util.logging.Logger;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
@@ -48,6 +50,8 @@ import org.jsoup.nodes.Element;
  * @see <a href="https://github.com/szimek/signature_pad">signature_pad</a>
  */
 public class SignatureField extends CustomField<String> {
+    
+    private static final long serialVersionUID = 1L;
     
     /**
      * The extension instance
@@ -139,6 +143,8 @@ public class SignatureField extends CustomField<String> {
     private SignatureFieldExtension initExtension() {
         SignatureFieldExtension ext = new SignatureFieldExtension(this);
         ext.addSignatureChangeListener(new SignatureFieldExtension.SignatureChangeListener() {
+            
+            private static final long serialVersionUID = 1L;
 
             @Override
             public void signatureChange(SignatureFieldExtension.SignatureChangeEvent event) {
@@ -202,14 +208,14 @@ public class SignatureField extends CustomField<String> {
     }
 
     /**
-     * Clears the field.<br>
-     * It's an alias for setValue(null)
+     * Clears the field.
      * 
      * @see #setValue(java.lang.Object)
      */
     @Override
     public void clear() {
         setValue(null);
+        extension.clear();
     }
 
     /*
@@ -222,35 +228,45 @@ public class SignatureField extends CustomField<String> {
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         Attributes attr = design.attributes();
-        if (design.hasAttr("dot-size")) {
-            setDotSize(DesignAttributeHandler.readAttribute(
-                    "dot-size", attr, Double.class));
-        }
-        if (design.hasAttr("min-width")) {
-            setMinWidth(DesignAttributeHandler.readAttribute(
-                    "min-width", attr, Double.class));
-        }
-        if (design.hasAttr("max-width")) {
-            setMaxWidth(DesignAttributeHandler.readAttribute(
-                    "max-width", attr, Double.class));
-        }
-        if (design.hasAttr("background-color")) {
-            setBackgroundColor(DesignAttributeHandler.readAttribute(
-                    "background-color", attr, String.class));
-        }
-        if (design.hasAttr("pen-color")) {
-            setPenColor(DesignAttributeHandler.readAttribute(
-                    "pen-color", attr, String.class));
-        }
-        if (design.hasAttr("velocity-filter-weight")) {
-            setVelocityFilterWeight(DesignAttributeHandler.readAttribute(
-                    "velocity-filter-weight", attr, Double.class));
-        }
-        if (design.hasAttr("clear-button")) {
-            setClearButtonEnabled(DesignAttributeHandler.readAttribute(
-                    "clear-button", attr, Boolean.class));
+        if (attr.hasKey("mime-type")) {
+            MimeType mimeType = null;
+            String mimeTypeString = DesignAttributeHandler.getFormatter().parse(
+                     attr.get("mime-type"), String.class);
+            try {
+                mimeType = MimeType.valueOfMimeType(mimeTypeString);
+            } catch (IllegalArgumentException e) {
+                Logger.getLogger(SignatureField.class.getName()).info(
+                        "Unsupported MIME-Type found when reading from design : "
+                                .concat(mimeTypeString));
+            }
+            setMimeType(mimeType);
         }
     }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        Attributes attr = design.attributes();
+        SignatureField def = designContext.getDefaultInstance(this);
+        MimeType mimeType = getMimeType();
+        if (mimeType != null) {
+            String mimeTypeDef = null;
+            if (def.getMimeType() != null) {
+                mimeTypeDef = getMimeType().getMimeType();
+            }
+            DesignAttributeHandler.writeAttribute("mime-type", attr,
+                    mimeType.getMimeType(), mimeTypeDef, String.class);
+        }
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> a = super.getCustomAttributes();
+        a.add("mime-type");
+        return a;
+    }
+    
+    
     
     /**
      * Gets the radius of a single dot.
@@ -346,7 +362,7 @@ public class SignatureField extends CustomField<String> {
      * black). Use a non-transparent color e.g. "rgb(255,255,255)" (opaque
      * white) if you'd like to save signatures as JPEG images.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @return Color used to clear the background.
      */
@@ -360,7 +376,7 @@ public class SignatureField extends CustomField<String> {
      * black). Use a non-transparent color e.g. "rgb(255,255,255)" (opaque
      * white) if you'd like to save signatures as JPEG images.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @param backgroundColor Color used to clear the background.
      */
@@ -374,7 +390,7 @@ public class SignatureField extends CustomField<String> {
      * black). Use a non-transparent color e.g. "rgb(255,255,255)" (opaque
      * white) if you'd like to save signatures as JPEG images.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @param backgroundColor Color used to clear the background.
      * @return This {@link SignatureField}
@@ -388,7 +404,7 @@ public class SignatureField extends CustomField<String> {
      * Sets the color used to draw the lines. Can be any color format accepted
      * by context.fillStyle.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @return The color used to draw the lines.
      */
@@ -400,7 +416,7 @@ public class SignatureField extends CustomField<String> {
      * Sets the color used to draw the lines. Can be any color format accepted
      * by context.fillStyle.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @param penColor The color used to draw the lines.
      */
@@ -412,7 +428,7 @@ public class SignatureField extends CustomField<String> {
      * Sets the color used to draw the lines. Can be any color format accepted
      * by context.fillStyle.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @param penColor The color used to draw the lines.
      * @return This {@link SignatureField}

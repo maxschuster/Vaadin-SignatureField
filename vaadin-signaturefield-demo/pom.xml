@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <vaadin.version>7.5.7</vaadin.version>
+        <vaadin.version>7.5.9</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
     </properties>
 
@@ -84,6 +84,11 @@
             <groupId>eu.maxschuster</groupId>
             <artifactId>vaadin-signaturefield</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.maxschuster</groupId>
+            <artifactId>vaadin-colorpickerfield</artifactId>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
 

@@ -27,6 +27,7 @@ import elemental.json.JsonString;
 import elemental.json.JsonValue;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import eu.maxschuster.vaadin.signaturefield.shared.SignatureFieldExtensionState;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
@@ -43,6 +44,8 @@ import java.lang.reflect.Method;
 @StyleSheet("vaadin://addons/signaturefield/dist/SignatureFieldExtension.css")
 public class SignatureFieldExtension extends AbstractJavaScriptExtension {
     
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Current signature value
      */
@@ -51,7 +54,7 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
     /**
      * Listener that gets called when the signature changes
      */
-    public interface SignatureChangeListener {
+    public interface SignatureChangeListener extends Serializable {
         
         public static final Method METHOD = ReflectTools.findMethod(
                 SignatureChangeListener.class, "signatureChange",
@@ -65,6 +68,8 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      * A signature change event
      */
     public static class SignatureChangeEvent extends Component.Event {
+        
+        private static final long serialVersionUID = 1L;
         
         private final SignatureFieldExtension extension;
         
@@ -141,6 +146,13 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      */
     protected void updateSignature() {
         callFunction("setSignature", getSignature());
+    }
+    
+    /**
+     * Clears the field on the client-side
+     */
+    public void clear() {
+        callFunction("clear");
     }
     
     /**
@@ -289,7 +301,7 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      * black). Use a non-transparent color e.g. "rgb(255,255,255)" (opaque
      * white) if you'd like to save signatures as JPEG images.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @return Color used to clear the background.
      */
@@ -303,7 +315,7 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      * black). Use a non-transparent color e.g. "rgb(255,255,255)" (opaque
      * white) if you'd like to save signatures as JPEG images.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @param backgroundColor Color used to clear the background.
      */
@@ -315,7 +327,7 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      * Sets the color used to draw the lines. Can be any color format accepted
      * by context.fillStyle.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @return The color used to draw the lines.
      */
@@ -327,7 +339,7 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      * Sets the color used to draw the lines. Can be any color format accepted
      * by context.fillStyle.<br>
      * <br>
-     * Some predefined colors can be found in class {@link Color}
+     * Some predefined colors can be found in class {@link SampleColors}
      *
      * @param penColor The color used to draw the lines.
      */
@@ -359,7 +371,12 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      * @return The {@link MimeType} of generated images
      */
     public MimeType getMimeType() {
-        return MimeType.valueOfMimeType(getState(false).mimeType);
+        String mimeType = getState(false).mimeType;
+        if (mimeType != null) {
+            return MimeType.valueOfMimeType(mimeType);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -368,7 +385,11 @@ public class SignatureFieldExtension extends AbstractJavaScriptExtension {
      * @param mimeType The {@link MimeType} of generated images
      */
     public void setMimeType(MimeType mimeType) {
-        getState().mimeType = mimeType.getMimeType();
+        if (mimeType != null) {
+            getState().mimeType = mimeType.getMimeType();
+        } else {
+            getState().mimeType = null;
+        }
     }
 
     /**

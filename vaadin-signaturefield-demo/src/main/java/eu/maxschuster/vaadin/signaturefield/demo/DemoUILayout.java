@@ -19,13 +19,17 @@ import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.declarative.Design;
+import eu.maxschuster.vaadin.colorpickerfield.ColorPickerField;
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
 
 /**
@@ -40,6 +44,12 @@ public class DemoUILayout extends VerticalLayout {
     public Button clearButton;
     public Button saveButton;
     public ComboBox mimeTypeComboBox;
+    public TextField dotSizeTextField;
+    public TextField minWidthTextField;
+    public TextField maxWidthTextField;
+    public TextField velocityFilterWeightTextField;
+    public ColorPickerField backgroundColorColorPicker;
+    public ColorPickerField penColorColorPicker;
     public CheckBox immediateCheckBox;
     public CheckBox readOnlyCheckBox;
     public CheckBox requiredCheckBox;

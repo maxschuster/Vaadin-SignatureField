@@ -24,6 +24,8 @@ import eu.maxschuster.vaadin.signaturefield.SignatureFieldExtension;
  * @author Max Schuster
  */
 public class SignatureFieldExtensionState extends JavaScriptExtensionState {
+
+    private static final long serialVersionUID = 1L;
     
     /**
      * Extension is read only.

@@ -36,6 +36,8 @@ import java.util.Locale;
  */
 public class StringToByteArrayConverter implements Converter<String, byte[]> {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Images are always encoded using Base64.
      */

@@ -32,6 +32,9 @@
 function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
 
     "use strict";
+    
+    var defaultMimeType = "image/png",
+            defaultDotSize;
 
     /* jshint validthis:true */
     /* jshint -W087 */ // All 'debugger' statements should be removed
@@ -47,8 +50,9 @@ function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
         this.canvas = this.createCanvas(this.parent);
         this.clearButton = null;
         this.signature = null;
-        this.mimeType = "image/png";
+        this.mimeType = defaultMimeType;
         this.signaturePad = this.createSignaturePad(this.canvas);
+        defaultDotSize = this.signaturePad.dotSize;
         this.immediate = state.immediate;
         this.readOnly = state.readOnly;
 
@@ -238,14 +242,15 @@ function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
                 parent = this.parent,
                 signaturePad = this.signaturePad;
 
-        signaturePad.dotSize = state.dotSize;
+        signaturePad.dotSize = state.dotSize || state.dotSize === 0 ?
+                state.dotSize : defaultDotSize;
         signaturePad.minWidth = state.minWidth;
         signaturePad.maxWidth = state.maxWidth;
         signaturePad.backgroundColor = state.backgroundColor;
         signaturePad.penColor = state.penColor;
         signaturePad.velocityFilterWeight = state.velocityFilterWeight;
 
-        this.mimeType = state.mimeType;
+        this.mimeType = state.mimeType || defaultMimeType;
         this.immediate = state.immediate;
 
         var readOnly = state.readOnly,

@@ -20,6 +20,7 @@ limitations under the License.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="package-mapping" content="sf:eu.maxschuster.vaadin.signaturefield" />
+        <meta name="package-mapping" content="cpf:eu.maxschuster.vaadin.colorpickerfield" />
     </head>
     <body>
     <v-vertical-layout width-full="">
@@ -27,60 +28,62 @@ limitations under the License.
             <v-label _id="pageTitleLabel" style-name="h1" width="-1px" :center>
                 SignatureField
             </v-label>
-            <v-tab-sheet width="-1px" :center >
-                <tab caption="Demo">
-                    <v-panel style-name="signature-panel">
-                        <v-vertical-layout margin="" spacing="">
-                            <sf-signature-field _id="signatureField" 
-                                    width="340px" 
-                                    height="190px" 
-                                    pen-color="#120a8f" 
-                                    background-color="white" 
-                                    velocity-filter-weight="0.7" 
-                                    :middle :center />
-                            <v-horizontal-layout width="340px" spacing="">
-                                <v-button _id="clearButton" :middle :left>
-                                    Clear
-                                </v-button>
-                                <v-label  width="-1px" :middle :center>
-                                    Sign above
-                                </v-label>
-                                <v-button _id="saveButton" :middle :right>
-                                    Save
-                                </v-button>
-                            </v-horizontal-layout>
-                            <v-accordion _id="resultsAccordion" caption="Results:">
-                                <tab caption="String Image">
-                                    <v-image _id="stringPreviewImage" width="340px" height="190px" />
-                                </tab>
-                                <tab caption="DataURL Image">
-                                    <v-image _id="dataUrlPreviewImage" width="340px" height="190px" />
-                                </tab>
-                                <tab caption="StreamResource Image">
-                                    <v-image _id="binaryPreviewImage" width="340px" height="190px" />
-                                </tab>
-                                <tab caption="DataURL String">
-                                    <v-vertical-layout width="340px" height="190px">
-                                        <v-text-area _id="dataUrlAsText" size-full="" />
-                                    </v-vertical-layout>
-                                </tab>
-                            </v-accordion>
-                            <v-label _id="emptyLabel" caption="Is Empty:" />
-                        </v-vertical-layout>
-                    </v-panel>
-                </tab>
-                <tab caption="Options">
-                    <v-panel size-full="">
-                        <v-form-layout margin="" spacing="">
-                            <v-combo-box _id="mimeTypeComboBox" item-caption-property-id="mimeType" null-selection-allowed="false" caption="Result MIME-Type" />
-                            <v-check-box _id="immediateCheckBox" caption="immediate" />
-                            <v-check-box _id="readOnlyCheckBox" caption="readOnly" />
-                            <v-check-box _id="requiredCheckBox" caption="required" />
-                            <v-check-box _id="clearButtonEnabledCheckBox" caption="clearButtonEnabled" />
-                        </v-form-layout>
-                    </v-panel>
-                </tab>
-            </v-tab-sheet>
+            <v-panel style-name="signature-panel" width-auto="" :center>
+                <v-vertical-layout margin="" spacing="">
+                    <sf-signature-field _id="signatureField" 
+                            caption="Sign here:"
+                            width="340px" 
+                            height="190px" 
+                            pen-color="#120a8f" 
+                            background-color="white" 
+                            velocity-filter-weight="0.7"
+                            mime-type="image/jpeg"
+                            :middle :center />
+                    <v-horizontal-layout width="340px" spacing="">
+                        <v-button _id="clearButton" :middle :left>
+                            Clear
+                        </v-button>
+                        <v-popup-view hide-on-mouse-out="false" :middle :center>
+                            <popup-content>
+                                <v-form-layout margin="" spacing="" width="450">
+                                    <v-combo-box _id="mimeTypeComboBox" item-caption-property-id="mimeType" null-selection-allowed="false" caption="Result MIME-Type" width-full="" />
+                                    <v-text-field _id="dotSizeTextField" caption="dotSize" required="" width-full="" />
+                                    <v-text-field _id="minWidthTextField" caption="minWidth" required="" width-full="" />
+                                    <v-text-field _id="maxWidthTextField" caption="maxWidth" required="" width-full="" />
+                                    <v-text-field _id="velocityFilterWeightTextField" caption="velocityFilterWeight" required="" width-full="" />
+                                    <cpf-color-picker-field _id="backgroundColorColorPicker" caption="backgroundColor" required="" width-full="" />
+                                    <cpf-color-picker-field _id="penColorColorPicker" caption="penColor" required="" width-full="" />
+                                    <v-check-box _id="immediateCheckBox" caption="immediate" width-full="" />
+                                    <v-check-box _id="readOnlyCheckBox" caption="readOnly" width-full="" />
+                                    <v-check-box _id="requiredCheckBox" caption="required" width-full="" />
+                                    <v-check-box _id="clearButtonEnabledCheckBox" caption="clearButtonEnabled" width-full="" />
+                                </v-form-layout>
+                            </popup-content>
+                            Options
+                        </v-popup-view>
+                        <v-button _id="saveButton" :middle :right>
+                            Save
+                        </v-button>
+                    </v-horizontal-layout>
+                    <v-accordion _id="resultsAccordion" caption="Results:">
+                        <tab caption="String Image">
+                            <v-image _id="stringPreviewImage" width="340px" height="190px" />
+                        </tab>
+                        <tab caption="DataURL Image">
+                            <v-image _id="dataUrlPreviewImage" width="340px" height="190px" />
+                        </tab>
+                        <tab caption="StreamResource Image">
+                            <v-image _id="binaryPreviewImage" width="340px" height="190px" />
+                        </tab>
+                        <tab caption="DataURL String">
+                            <v-vertical-layout width="340px" height="190px">
+                                <v-text-area _id="dataUrlAsText" size-full="" />
+                            </v-vertical-layout>
+                        </tab>
+                    </v-accordion>
+                    <v-label _id="emptyLabel" caption="Is Empty:" />
+                </v-vertical-layout>
+            </v-panel>
             <v-label style-name="h1" width="-1px" :center>
                 Links
             </v-label>

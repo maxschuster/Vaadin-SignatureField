@@ -31,6 +31,8 @@ import java.net.MalformedURLException;
  */
 public class StringToDataUrlConverter implements Converter<String, DataUrl> {
 
+    private static final long serialVersionUID = 1L;
+
     private final IDataUrlSerializer serializer;
 
     public StringToDataUrlConverter(IDataUrlSerializer serializer) {
