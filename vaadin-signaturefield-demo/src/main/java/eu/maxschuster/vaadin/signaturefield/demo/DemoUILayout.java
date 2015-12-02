@@ -62,6 +62,8 @@ public class DemoUILayout extends VerticalLayout {
     public Accordion resultsAccordion;
     public Link signaturePadLink;
     public Link signatureFieldLink;
+    public Button testFromStringButton;
+    public Button testFromDataUrlButton;
     
     public DemoUILayout() {
         Design.read(this);

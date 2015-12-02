@@ -65,17 +65,25 @@ limitations under the License.
                             Save
                         </v-button>
                     </v-horizontal-layout>
+                    <v-horizontal-layout caption="Test Values:" width="340px" spacing>
+                        <v-button _id="testFromStringButton" width-full disable-on-click>
+                            From String
+                        </v-button>
+                        <v-button _id="testFromDataUrlButton" width-full disable-on-click>
+                            From DataUrl
+                        </v-button>
+                    </v-horizontal-layout>
                     <v-accordion _id="resultsAccordion" caption="Results:">
                         <tab caption="String Image">
                             <v-image _id="stringPreviewImage" width="340px" height="190px" />
                         </tab>
-                        <tab caption="DataURL Image">
+                        <tab caption="DataUrl Image">
                             <v-image _id="dataUrlPreviewImage" width="340px" height="190px" />
                         </tab>
                         <tab caption="StreamResource Image">
                             <v-image _id="binaryPreviewImage" width="340px" height="190px" />
                         </tab>
-                        <tab caption="DataURL String">
+                        <tab caption="String">
                             <v-vertical-layout width="340px" height="190px">
                                 <v-text-area _id="dataUrlAsText" size-full="" />
                             </v-vertical-layout>

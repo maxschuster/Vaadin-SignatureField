@@ -41,14 +41,18 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import eu.maxschuster.dataurl.DataUrl;
+import eu.maxschuster.dataurl.DataUrlBuilder;
+import eu.maxschuster.dataurl.DataUrlEncoding;
 import eu.maxschuster.dataurl.DataUrlSerializer;
 import eu.maxschuster.dataurl.IDataUrlSerializer;
 import eu.maxschuster.vaadin.colorpickerfield.converter.ColorToRgbaConverter;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 @Theme("demo")
 @PreserveOnRefresh
@@ -315,6 +319,42 @@ public class DemoUI extends UI {
                             Level.SEVERE, e.getLocalizedMessage(), e);
                 } finally {
                     counter++;
+                }
+            }
+        });
+        
+        l.testFromDataUrlButton.addClickListener(new ClickListener() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public void buttonClick(ClickEvent event) {
+                l.testFromDataUrlButton.setEnabled(true);
+                try {
+                    byte[] data = IOUtils.toByteArray(DemoUI.class.getResourceAsStream("hello-dataurl.png"));
+                    DataUrl value = (new DataUrlBuilder())
+                            .setData(data)
+                            .setMimeType("image/png")
+                            .setEncoding(DataUrlEncoding.BASE64)
+                            .build();
+                    dataUrlProperty.setValue(value);
+                } catch (IOException ex) {
+                    Notification.show("Error reading test value!", Notification.Type.ERROR_MESSAGE);
+                    Logger.getLogger(DemoUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        l.testFromStringButton.addClickListener(new ClickListener() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public void buttonClick(ClickEvent event) {
+                l.testFromStringButton.setEnabled(true);
+                try {
+                    String value = IOUtils.toString(
+                            DemoUI.class.getResourceAsStream("hello-string.txt"));
+                    l.signatureField.setValue(value);
+                } catch (IOException ex) {
+                    Notification.show("Error reading test value!", Notification.Type.ERROR_MESSAGE);
+                    Logger.getLogger(DemoUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
