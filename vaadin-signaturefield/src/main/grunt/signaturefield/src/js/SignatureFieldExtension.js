@@ -88,9 +88,10 @@ function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
             return;
         }
         this.signature = newSignature;
-        signaturePad.clear();
         if (newSignature) {
             signaturePad.fromDataURL(newSignature);
+        } else {
+            signaturePad.clear();
         }
     };
 
@@ -132,10 +133,10 @@ function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
         canvas.width = width;
         canvas.height = height;
 
-        signaturePad.clear();
-
         if (signature) {
             signaturePad.fromDataURL(signature);
+        } else {
+            signaturePad.clear();
         }
     };
 
@@ -152,19 +153,16 @@ function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
 
         // Remove window.devicePixelRatio
         signaturePad.fromDataURL = function (dataUrl) {
-            var self = this,
-                    image = new Image(),
-                    width = this._canvas.width,
-                    height = this._canvas.height;
-
-            this._reset();
+            var image = new Image();
             image.src = dataUrl;
             image.onload = function () {
-                self._ctx.drawImage(image, 0, 0, width, height);
+                signaturePad.clear();
+                this._isEmpty = false;
+                signaturePad._ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             };
             this._isEmpty = false;
         };
-
+       
         return signaturePad;
     };
 

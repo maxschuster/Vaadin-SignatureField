@@ -359,6 +359,26 @@ public class DemoUI extends UI {
             }
         });
         
+        l.testTransparentButton.addClickListener(new ClickListener() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public void buttonClick(ClickEvent event) {
+                l.testTransparentButton.setEnabled(true);
+                try {
+                    byte[] data = IOUtils.toByteArray(DemoUI.class.getResourceAsStream("transparent.png"));
+                    DataUrl value = (new DataUrlBuilder())
+                            .setData(data)
+                            .setMimeType("image/png")
+                            .setEncoding(DataUrlEncoding.BASE64)
+                            .build();
+                    l.signatureField.setConvertedValue(value);
+                } catch (IOException ex) {
+                    Notification.show("Error reading test value!", Notification.Type.ERROR_MESSAGE);
+                    Logger.getLogger(DemoUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
         l.resultsAccordion.setSelectedTab(0);
     }
     

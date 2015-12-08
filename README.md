@@ -6,6 +6,9 @@ Its value is the data url from the html canvas as simple String.
 [signature_pad](https://github.com/szimek/signature_pad) by Szymon Nowak is used
 to capture the signature at the client-side.
 
+## Requirements
+* Vaadin 7.4+
+
 ## Demo
 [http://maxschuster.jelastic.servint.net/SignatureField/](http://maxschuster.jelastic.servint.net/SignatureField/)
 

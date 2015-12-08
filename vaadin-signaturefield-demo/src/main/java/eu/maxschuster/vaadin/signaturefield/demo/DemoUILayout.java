@@ -64,6 +64,7 @@ public class DemoUILayout extends VerticalLayout {
     public Link signatureFieldLink;
     public Button testFromStringButton;
     public Button testFromDataUrlButton;
+    public Button testTransparentButton;
     
     public DemoUILayout() {
         Design.read(this);
