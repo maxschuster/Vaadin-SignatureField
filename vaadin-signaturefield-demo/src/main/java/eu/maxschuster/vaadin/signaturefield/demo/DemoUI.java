@@ -56,7 +56,7 @@ import org.apache.commons.io.IOUtils;
 
 @Theme("demo")
 @PreserveOnRefresh
-@Push(PushMode.DISABLED)
+@Push(PushMode.AUTOMATIC)
 public class DemoUI extends UI {
             
     private static final long serialVersionUID = 1L;

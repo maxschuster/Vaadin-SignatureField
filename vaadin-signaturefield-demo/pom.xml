@@ -5,12 +5,12 @@
     <groupId>eu.maxschuster</groupId>
     <artifactId>vaadin-signaturefield-demo</artifactId>
     <packaging>war</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>SignatureField (Demo)</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <vaadin.version>7.5.9</vaadin.version>
+        <vaadin.version>7.6.3</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
     </properties>
 

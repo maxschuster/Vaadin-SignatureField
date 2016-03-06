@@ -5,7 +5,7 @@
 	<groupId>eu.maxschuster</groupId>
 	<artifactId>vaadin-signaturefield-root</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>SignatureField (Root)</name>
 
 	<modules>
