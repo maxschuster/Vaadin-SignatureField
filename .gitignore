@@ -1,7 +1,6 @@
-/Vaadin-SignatureField-demo/target/
-/Vaadin-SignatureField-demo/src/main/webapp/VAADIN/widgetsets/
+/vaadin-signaturefield-demo/target/
+/vaadin-signaturefield-demo/src/main/webapp/VAADIN/widgetsets/
 /vaadin-signaturefield/target/
 /vaadin-signaturefield/target-grunt/
-/vaadin-signaturefield-demo/src/main/webapp/VAADIN/widgetsets/
 /vaadin-signaturefield/src/main/grunt/signaturefield/nbproject/private/
 /vaadin-signaturefield/src/main/grunt/signaturefield/node_modules/
