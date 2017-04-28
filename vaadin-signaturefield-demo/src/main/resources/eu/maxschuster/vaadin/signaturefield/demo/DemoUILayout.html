@@ -20,16 +20,15 @@ limitations under the License.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="package-mapping" content="sf:eu.maxschuster.vaadin.signaturefield" />
-        <meta name="package-mapping" content="cpf:eu.maxschuster.vaadin.colorpickerfield" />
     </head>
     <body>
-    <v-vertical-layout width-full="">
-        <v-vertical-layout width="-1px" margin="" spacing="" :center>
-            <v-label _id="pageTitleLabel" style-name="h1" width="-1px" :center>
+    <vaadin7-vertical-layout width-full="">
+        <vaadin7-vertical-layout width="-1px" margin="" spacing="" :center>
+            <vaadin7-label _id="pageTitleLabel" style-name="h1" width="-1px" :center>
                 SignatureField
-            </v-label>
-            <v-panel style-name="signature-panel" width-auto="" :center>
-                <v-vertical-layout margin="" spacing="">
+            </vaadin7-label>
+            <vaadin-panel style-name="signature-panel" width-auto="" :center>
+                <vaadin7-vertical-layout margin="" spacing="">
                     <sf-signature-field _id="signatureField" 
                             caption="Sign here:"
                             width="340px" 
@@ -39,84 +38,84 @@ limitations under the License.
                             velocity-filter-weight="0.7"
                             mime-type="image/jpeg"
                             :middle :center />
-                    <v-horizontal-layout width="340px" spacing="">
-                        <v-button _id="clearButton" :middle :left>
+                    <vaadin7-horizontal-layout width="340px" spacing="">
+                        <vaadin-button _id="clearButton" :middle :left>
                             Clear
-                        </v-button>
-                        <v-popup-view hide-on-mouse-out="false" :middle :center>
+                        </vaadin-button>
+                        <vaadin-popup-view hide-on-mouse-out="false" :middle :center>
                             <popup-content>
-                                <v-form-layout margin="" spacing="" width="450">
-                                    <v-combo-box _id="mimeTypeComboBox" item-caption-property-id="mimeType" null-selection-allowed="false" caption="Result MIME-Type" width-full="" />
-                                    <v-text-field _id="dotSizeTextField" caption="dotSize" required="" width-full="" />
-                                    <v-text-field _id="minWidthTextField" caption="minWidth" required="" width-full="" />
-                                    <v-text-field _id="maxWidthTextField" caption="maxWidth" required="" width-full="" />
-                                    <v-text-field _id="velocityFilterWeightTextField" caption="velocityFilterWeight" required="" width-full="" />
-                                    <cpf-color-picker-field _id="backgroundColorColorPicker" caption="backgroundColor" required="" width-full="" />
-                                    <cpf-color-picker-field _id="penColorColorPicker" caption="penColor" required="" width-full="" />
-                                    <v-check-box _id="immediateCheckBox" caption="immediate" width-full="" />
-                                    <v-check-box _id="readOnlyCheckBox" caption="readOnly" width-full="" />
-                                    <v-check-box _id="requiredCheckBox" caption="required" width-full="" />
-                                    <v-check-box _id="clearButtonEnabledCheckBox" caption="clearButtonEnabled" width-full="" />
-                                </v-form-layout>
+                                <vaadin-form-layout margin="" spacing="" width="450">
+                                    <vaadin7-combo-box _id="mimeTypeComboBox" item-caption-property-id="mimeType" null-selection-allowed="false" caption="Result MIME-Type" width-full="" />
+                                    <vaadin7-text-field _id="dotSizeTextField" caption="dotSize" required="" width-full="" />
+                                    <vaadin7-text-field _id="minWidthTextField" caption="minWidth" required="" width-full="" />
+                                    <vaadin7-text-field _id="maxWidthTextField" caption="maxWidth" required="" width-full="" />
+                                    <vaadin7-text-field _id="velocityFilterWeightTextField" caption="velocityFilterWeight" required="" width-full="" />
+                                    <vaadin-color-picker _id="backgroundColorColorPicker" caption="backgroundColor" required="" width-full="" />
+                                    <vaadin-color-picker _id="penColorColorPicker" caption="penColor" required="" width-full="" />
+                                    <vaadin7-check-box _id="immediateCheckBox" caption="immediate" width-full="" />
+                                    <vaadin7-check-box _id="readOnlyCheckBox" caption="readOnly" width-full="" />
+                                    <vaadin7-check-box _id="requiredCheckBox" caption="required" width-full="" />
+                                    <vaadin7-check-box _id="clearButtonEnabledCheckBox" caption="clearButtonEnabled" width-full="" />
+                                </vaadin-form-layout>
                             </popup-content>
                             Options
-                        </v-popup-view>
-                        <v-button _id="saveButton" :middle :right>
+                        </vaadin-popup-view>
+                        <vaadin-button _id="saveButton" :middle :right>
                             Save
-                        </v-button>
-                    </v-horizontal-layout>
-                    <v-horizontal-layout caption="Test Values:" width="340px" spacing>
-                        <v-button _id="testFromStringButton" width-full disable-on-click>
+                        </vaadin-button>
+                    </vaadin7-horizontal-layout>
+                    <vaadin7-horizontal-layout caption="Test Values:" width="340px" spacing>
+                        <vaadin-button _id="testFromStringButton" width-full disable-on-click>
                             From String
-                        </v-button>
-                        <v-button _id="testFromDataUrlButton" width-full disable-on-click>
+                        </vaadin-button>
+                        <vaadin-button _id="testFromDataUrlButton" width-full disable-on-click>
                             From DataUrl
-                        </v-button>
-                    </v-horizontal-layout>
-                    <v-button _id="testTransparentButton" width="340px" disable-on-click>
+                        </vaadin-button>
+                    </vaadin7-horizontal-layout>
+                    <vaadin-button _id="testTransparentButton" width="340px" disable-on-click>
                         Tansparent
-                    </v-button>
-                    <v-accordion _id="resultsAccordion" caption="Results:">
+                    </vaadin-button>
+                    <vaadin-accordion _id="resultsAccordion" caption="Results:">
                         <tab caption="String Image">
-                            <v-image _id="stringPreviewImage" width="340px" height="190px" />
+                            <vaadin-image _id="stringPreviewImage" width="340px" height="190px" />
                         </tab>
                         <tab caption="DataUrl Image">
-                            <v-image _id="dataUrlPreviewImage" width="340px" height="190px" />
+                            <vaadin-image _id="dataUrlPreviewImage" width="340px" height="190px" />
                         </tab>
                         <tab caption="StreamResource Image">
-                            <v-image _id="binaryPreviewImage" width="340px" height="190px" />
+                            <vaadin-image _id="binaryPreviewImage" width="340px" height="190px" />
                         </tab>
                         <tab caption="String">
-                            <v-vertical-layout width="340px" height="190px">
-                                <v-text-area _id="dataUrlAsText" size-full="" />
-                            </v-vertical-layout>
+                            <vaadin7-vertical-layout width="340px" height="190px">
+                                <vaadin7-text-area _id="dataUrlAsText" size-full="" />
+                            </vaadin7-vertical-layout>
                         </tab>
-                    </v-accordion>
-                    <v-label _id="emptyLabel" caption="Is Empty:" />
-                </v-vertical-layout>
-            </v-panel>
-            <v-label style-name="h1" width="-1px" :center>
+                    </vaadin-accordion>
+                    <vaadin7-label _id="emptyLabel" caption="Is Empty:" />
+                </vaadin7-vertical-layout>
+            </vaadin-panel>
+            <vaadin7-label style-name="h1" width="-1px" :center>
                 Links
-            </v-label>
+            </vaadin7-label>
             
             <!--
             
             Href and target are not marked as custom attributes.
             Restore when bug in vaadin has been fixed
             
-            <v-link caption="https://github.com/szimek/signature_pad"
+            <vaadin-link caption="https://github.com/szimek/signature_pad"
                     href="https://github.com/szimek/signature_pad"
                     target="_blank" :center />
-            <v-link caption="https://github.com/maxschuster/Vaadin-SignatureField"
+            <vaadin-link caption="https://github.com/maxschuster/Vaadin-SignatureField"
                     href="https://github.com/maxschuster/Vaadin-SignatureField"
                     target="_blank" :center />
             
             -->
-            <v-link _id="signaturePadLink"
+            <vaadin-link _id="signaturePadLink"
                     caption="https://github.com/szimek/signature_pad" :center />
-            <v-link _id="signatureFieldLink"
+            <vaadin-link _id="signatureFieldLink"
                     caption="https://github.com/maxschuster/Vaadin-SignatureField" :center />
-        </v-vertical-layout>
-    </v-vertical-layout>
+        </vaadin7-vertical-layout>
+    </vaadin7-vertical-layout>
     </body>
 </html>

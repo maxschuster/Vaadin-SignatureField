@@ -15,12 +15,12 @@
  */
 package eu.maxschuster.vaadin.signaturefield;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomField;
-import com.vaadin.ui.Field;
+import com.vaadin.v7.ui.CustomField;
+import com.vaadin.v7.ui.Field;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import eu.maxschuster.dataurl.DataUrl;
@@ -255,7 +255,7 @@ public class SignatureField extends CustomField<String> {
                 mimeTypeDef = getMimeType().getMimeType();
             }
             DesignAttributeHandler.writeAttribute("mime-type", attr,
-                    mimeType.getMimeType(), mimeTypeDef, String.class);
+                    mimeType.getMimeType(), mimeTypeDef, String.class, designContext);
         }
     }
 
@@ -599,7 +599,7 @@ public class SignatureField extends CustomField<String> {
      * 
      * @param validator the new validator to be added.
      * @return This {@link SignatureField}
-     * @see #addValidator(com.vaadin.data.Validator) 
+     * @see #addValidator(com.vaadin.v7.data.Validator) 
      */
     public SignatureField withValidator(Validator validator) {
         setImmediate(true);

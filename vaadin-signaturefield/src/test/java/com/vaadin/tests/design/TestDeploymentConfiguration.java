@@ -102,10 +102,5 @@ public class TestDeploymentConfiguration implements DeploymentConfiguration {
     public String getClassLoaderName() {
         return null;
     }
-
-    @Override
-    public LegacyProperyToStringMode getLegacyPropertyToStringMode() {
-        return LegacyProperyToStringMode.DISABLED;
-    }
     
 }

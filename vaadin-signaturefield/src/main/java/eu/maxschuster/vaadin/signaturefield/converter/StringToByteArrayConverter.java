@@ -15,7 +15,7 @@
  */
 package eu.maxschuster.vaadin.signaturefield.converter;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.dataurl.DataUrlEncoding;
 import eu.maxschuster.dataurl.DataUrlSerializer;

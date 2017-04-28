@@ -18,18 +18,16 @@ package eu.maxschuster.vaadin.signaturefield.demo;
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ColorPicker;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.CheckBox;
+import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
-import eu.maxschuster.vaadin.colorpickerfield.ColorPickerField;
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
 
 /**
@@ -48,8 +46,8 @@ public class DemoUILayout extends VerticalLayout {
     public TextField minWidthTextField;
     public TextField maxWidthTextField;
     public TextField velocityFilterWeightTextField;
-    public ColorPickerField backgroundColorColorPicker;
-    public ColorPickerField penColorColorPicker;
+    public ColorPicker backgroundColorColorPicker;
+    public ColorPicker penColorColorPicker;
     public CheckBox immediateCheckBox;
     public CheckBox readOnlyCheckBox;
     public CheckBox requiredCheckBox;

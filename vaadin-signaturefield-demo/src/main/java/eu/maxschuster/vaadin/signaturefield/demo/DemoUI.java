@@ -25,17 +25,17 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.Binder;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
@@ -45,7 +45,8 @@ import eu.maxschuster.dataurl.DataUrlBuilder;
 import eu.maxschuster.dataurl.DataUrlEncoding;
 import eu.maxschuster.dataurl.DataUrlSerializer;
 import eu.maxschuster.dataurl.IDataUrlSerializer;
-import eu.maxschuster.vaadin.colorpickerfield.converter.ColorToRgbaConverter;
+import eu.maxschuster.vaadin.colorconverters.ColorToRgbaConverter;
+import eu.maxschuster.vaadin.signaturefield.SignatureField;
 import eu.maxschuster.vaadin.signaturefield.converter.StringToDataUrlConverter;
 import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 import java.io.IOException;
@@ -56,7 +57,6 @@ import org.apache.commons.io.IOUtils;
 
 @Theme("demo")
 @PreserveOnRefresh
-@Push(PushMode.AUTOMATIC)
 public class DemoUI extends UI {
             
     private static final long serialVersionUID = 1L;
@@ -74,10 +74,10 @@ public class DemoUI extends UI {
     }
 
     private final ObjectProperty<DataUrl> dataUrlProperty
-            = new ObjectProperty<DataUrl>(null, DataUrl.class);
+            = new ObjectProperty<>(null, DataUrl.class);
     
     private final BeanItemContainer<MimeType> mimeTypeContainer
-            = new BeanItemContainer<MimeType>(MimeType.class,
+            = new BeanItemContainer<>(MimeType.class,
                     Arrays.asList(new MimeType[]{
                         MimeType.PNG,
                         MimeType.JPEG
@@ -107,15 +107,7 @@ public class DemoUI extends UI {
         l.signatureField.setPropertyDataSource(dataUrlProperty);
         l.signatureField.setConverter(new StringToDataUrlConverter());
         
-        l.clearButton.addClickListener(new ClickListener() {
-            
-            private static final long serialVersionUID = 1L;
-            
-            @Override
-            public void buttonClick(ClickEvent event) {
-                l.signatureField.clear();
-            }
-        });
+        l.clearButton.addClickListener(e -> l.signatureField.clear());
         
         final BrowserWindowOpener saveOpener = new BrowserWindowOpener("");
         saveOpener.setWindowName("_blank");
@@ -140,90 +132,51 @@ public class DemoUI extends UI {
         l.dotSizeTextField.setConverter(Double.class);
         l.dotSizeTextField.setNullSettingAllowed(true);
         l.dotSizeTextField.setConvertedValue(l.signatureField.getDotSize());
-        l.dotSizeTextField.addValueChangeListener(new ValueChangeListener() {
-            
-            private static final long serialVersionUID = 1L;
-            
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.signatureField.setDotSize((Double) l.dotSizeTextField.getConvertedValue());
-            }
+        l.dotSizeTextField.addValueChangeListener(e -> {
+            l.signatureField.setDotSize((Double) l.dotSizeTextField.getConvertedValue());
         });
         
         l.minWidthTextField.setConverter(Double.class);
         l.minWidthTextField.setConvertedValue(l.signatureField.getMinWidth());
-        l.minWidthTextField.addValueChangeListener(new ValueChangeListener() {
-            
-            private static final long serialVersionUID = 1L;
-            
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.signatureField.setMinWidth((Double) l.minWidthTextField.getConvertedValue());
-            }
+        l.minWidthTextField.addValueChangeListener(e -> {
+            l.signatureField.setMinWidth((Double) l.minWidthTextField.getConvertedValue());
         });
         
         l.maxWidthTextField.setConverter(Double.class);
         l.maxWidthTextField.setConvertedValue(l.signatureField.getMaxWidth());
-        l.maxWidthTextField.addValueChangeListener(new ValueChangeListener() {
-            
-            private static final long serialVersionUID = 1L;
-            
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.signatureField.setMaxWidth((Double) l.maxWidthTextField.getConvertedValue());
-            }
+        l.maxWidthTextField.addValueChangeListener(e -> {
+            l.signatureField.setMaxWidth((Double) l.maxWidthTextField.getConvertedValue());
         });
         
         l.velocityFilterWeightTextField.setConverter(Double.class);
         l.velocityFilterWeightTextField.setConvertedValue(l.signatureField.getVelocityFilterWeight());
-        l.velocityFilterWeightTextField.addValueChangeListener(new ValueChangeListener() {
-            
-            private static final long serialVersionUID = 1L;
-            
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.signatureField.setVelocityFilterWeight((Double) l.velocityFilterWeightTextField.getConvertedValue());
-            }
+        l.velocityFilterWeightTextField.addValueChangeListener(e -> {
+            l.signatureField.setVelocityFilterWeight((Double) l.velocityFilterWeightTextField.getConvertedValue());
         });
         
-        l.backgroundColorColorPicker.setConverter(new ColorToRgbaConverter());
-        l.backgroundColorColorPicker.setConvertedValue(l.signatureField.getBackgroundColor());
-        l.backgroundColorColorPicker.addValueChangeListener(new ValueChangeListener() {
-            
-            private static final long serialVersionUID = 1L;
-            
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.signatureField.setBackgroundColor((String)l.backgroundColorColorPicker.getConvertedValue());
-                Notification.show(
-                        "The background color will change after\n"
-                                + "you have cleared the signature field!",
-                        Notification.Type.WARNING_MESSAGE
-                );
-            }
+        Binder<SignatureField> binder = new Binder<>(SignatureField.class);
+        
+        binder.forField(l.backgroundColorColorPicker)
+                .withConverter(new ColorToRgbaConverter("Error converting color"))
+                .bind(SignatureField::getBackgroundColor, SignatureField::setBackgroundColor);
+        
+        l.backgroundColorColorPicker.addValueChangeListener(e -> {
+            Notification.show(
+                    "The background color will change after\n"
+                            + "you have cleared the signature field!",
+                    Notification.Type.WARNING_MESSAGE
+            );
         });
         
-        l.penColorColorPicker.setConverter(new ColorToRgbaConverter());
-        l.penColorColorPicker.setConvertedValue(l.signatureField.getPenColor());
-        l.penColorColorPicker.addValueChangeListener(new ValueChangeListener() {
-            
-            private static final long serialVersionUID = 1L;
-            
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.signatureField.setPenColor((String)l.penColorColorPicker.getConvertedValue());
-            }
-        });
+        binder.forField(l.penColorColorPicker)
+                .withConverter(new ColorToRgbaConverter("Error converting color"))
+                .bind(SignatureField::getPenColor, SignatureField::setPenColor);
+        
+        binder.setBean(l.signatureField);
 
-        l.immediateCheckBox.addValueChangeListener(new ValueChangeListener() {
-            
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean immediate = (Boolean) event.getProperty().getValue();
-                l.signatureField.setImmediate(immediate);
-            }
+        l.immediateCheckBox.addValueChangeListener(e -> {
+            boolean immediate = (Boolean) e.getProperty().getValue();
+            l.signatureField.setImmediate(immediate);
         });
 
         l.readOnlyCheckBox.addValueChangeListener(new ValueChangeListener() {
