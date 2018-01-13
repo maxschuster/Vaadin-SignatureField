@@ -5,7 +5,7 @@
     <groupId>eu.maxschuster</groupId>
     <artifactId>vaadin-signaturefield</artifactId>
     <packaging>bundle</packaging>
-    <version>2.0.0</version>
+    <version>3.0.0-SNAPSHOT</version>
     
     <name>SignatureField</name>
     <description>Vaadin field to capture signatures.</description>
