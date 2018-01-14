@@ -16,7 +16,6 @@
 package eu.maxschuster.vaadin.signaturefield.demo;
 
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.annotations.Push;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;

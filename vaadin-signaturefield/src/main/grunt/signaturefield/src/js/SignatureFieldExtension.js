@@ -167,16 +167,16 @@ function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
     };
 
     /**
-     * Creates the close button element and adds it to the given parent.
-     * @param {Element} parent Parent element to add the close button to.
-     * @returns {Element} Close button
+     * Creates the clear button element and adds it to the given parent.
+     * @param {Element} parent Parent element to add the clear button to.
+     * @returns {Element} Clear button
      */
-    this.createCloseButton = function (parent) {
-        var closeButton = document.createElement("button");
-        closeButton.setAttribute("class", "signaturefield-clearbutton");
-        parent.appendChild(closeButton);
-        this.addEvent(closeButton, "click", this.proxy(this.onClearButtonClick));
-        return closeButton;
+    this.createClearButton = function (parent) {
+        var clearButton = document.createElement("button");
+        clearButton.setAttribute("class", "signaturefield-clearbutton");
+        parent.appendChild(clearButton);
+        this.addEvent(clearButton, "click", this.proxy(this.onClearButtonClick));
+        return clearButton;
     };
 
     /**
@@ -263,10 +263,9 @@ function eu_maxschuster_vaadin_signaturefield_SignatureFieldExtension() {
         signaturePad.vReadOnly = readOnly;
 
         if ((!readOnly && state.clearButtonEnabled) && !this.clearButton) {
-            this.clearButton = this.createCloseButton(parent);
+            this.clearButton = this.createClearButton(parent);
         } else if ((readOnly || !state.clearButtonEnabled) && this.clearButton) {
-            var clearButton = this.clearButton;
-            parent.removeElement(clearButton);
+            parent.removeChild(this.clearButton);
             this.clearButton = null;
         }
     };
