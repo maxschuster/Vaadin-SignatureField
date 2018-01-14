@@ -16,32 +16,35 @@
 package eu.maxschuster.vaadin.signaturefield.demo;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.annotations.Theme;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ColorPicker;
-import com.vaadin.v7.ui.CheckBox;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Image;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.TextField;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.declarative.Design;
 import eu.maxschuster.vaadin.signaturefield.SignatureField;
+import eu.maxschuster.vaadin.signaturefield.shared.MimeType;
 
 /**
  *
  * @author Max Schuster
  */
 @DesignRoot
-public class DemoUILayout extends VerticalLayout {
+@Theme("demo")
+public abstract class DemoUILayout extends UI {
     
     public Label pageTitleLabel;
     public SignatureField signatureField;
     public Button clearButton;
     public Button saveButton;
-    public ComboBox mimeTypeComboBox;
+    public ComboBox<MimeType> mimeTypeComboBox;
     public TextField dotSizeTextField;
     public TextField minWidthTextField;
     public TextField maxWidthTextField;

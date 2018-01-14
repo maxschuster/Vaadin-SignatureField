@@ -15,9 +15,10 @@
  */
 package eu.maxschuster.vaadin.signaturefield.converter;
 
-import java.util.Locale;
+import com.vaadin.data.Converter;
+import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
-import com.vaadin.v7.data.util.converter.Converter;
 import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.dataurl.DataUrlSerializer;
 import eu.maxschuster.dataurl.IDataUrlSerializer;
@@ -31,10 +32,10 @@ import java.net.MalformedURLException;
  */
 public class StringToDataUrlConverter implements Converter<String, DataUrl> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private final IDataUrlSerializer serializer;
-
+    
     public StringToDataUrlConverter(IDataUrlSerializer serializer) {
         this.serializer = serializer;
     }
@@ -44,35 +45,21 @@ public class StringToDataUrlConverter implements Converter<String, DataUrl> {
     }
 
     @Override
-    public DataUrl convertToModel(String value,
-            Class<? extends DataUrl> targetType, Locale locale)
-            throws ConversionException {
+    public Result<DataUrl> convertToModel(String value, ValueContext context) {
         try {
-            return value == null ? null : serializer.unserialize(value);
+            return Result.ok(value == null ? null : serializer.unserialize(value));
         } catch (MalformedURLException e) {
-            throw new ConversionException(e);
+            return Result.error(e.getMessage());
         }
     }
 
     @Override
-    public String convertToPresentation(DataUrl value,
-            Class<? extends String> targetType, Locale locale)
-            throws ConversionException {
+    public String convertToPresentation(DataUrl value, ValueContext context) {
         try {
             return value == null ? null : serializer.serialize(value);
         } catch (MalformedURLException e) {
-            throw new ConversionException(e);
+            throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Class<DataUrl> getModelType() {
-        return DataUrl.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
 }

@@ -15,7 +15,9 @@
  */
 package eu.maxschuster.vaadin.signaturefield.converter;
 
-import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.data.Converter;
+import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 import eu.maxschuster.dataurl.DataUrl;
 import eu.maxschuster.dataurl.DataUrlEncoding;
 import eu.maxschuster.dataurl.DataUrlSerializer;
@@ -26,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
-import java.util.Locale;
 
 /**
  * A converter that converts from an RFC 2397 data url {@link String} to 
@@ -36,7 +37,7 @@ import java.util.Locale;
  */
 public class StringToByteArrayConverter implements Converter<String, byte[]> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * Images are always encoded using Base64.
@@ -121,11 +122,9 @@ public class StringToByteArrayConverter implements Converter<String, byte[]> {
     }
 
     @Override
-    public byte[] convertToModel(String value,
-            Class<? extends byte[]> targetType, Locale locale)
-            throws ConversionException {
+    public Result<byte[]> convertToModel(String value, ValueContext context) {
         if (value == null) {
-            return null;
+            return Result.ok(null);
         }
 
         try {
@@ -134,22 +133,20 @@ public class StringToByteArrayConverter implements Converter<String, byte[]> {
             // If a MimeType was defined make sure that the data url has the
             // same MIME-Type
             if (mimeType != null && !matchMimeType(dataUrl, mimeType)) {
-                throw new ConversionException("The MIME-Type of the given "
+                return Result.error("The MIME-Type of the given "
                         + "RFC 2397 data url String (" + dataUrl.getMimeType()
                         + ") doesn't match the required MimeType ("
                         + mimeType.getMimeType() + ")" );
             }
 
-            return dataUrl.getData();
+            return Result.ok(dataUrl.getData());
         } catch (MalformedURLException ex) {
-            throw new ConversionException(ex);
+            return Result.error(ex.getMessage());
         }
     }
 
     @Override
-    public String convertToPresentation(byte[] value,
-            Class<? extends String> targetType, Locale locale)
-            throws ConversionException {
+    public String convertToPresentation(byte[] value, ValueContext context) {
         if (value == null) {
             return null;
         }
@@ -161,13 +158,13 @@ public class StringToByteArrayConverter implements Converter<String, byte[]> {
             try {
                 appliedMimeType = guessMimeType(value);
             } catch (IOException e) {
-                throw new ConversionException(
+                throw new RuntimeException(
                         "There was a problem with the stream", e);
             } catch (IllegalArgumentException e) {
-                throw new ConversionException("Properly the MIME-Type guessing "
+                throw new RuntimeException("Properly the MIME-Type guessing "
                         + "returned an unsupported MIME-Type", e);
             } catch (NullPointerException e) {
-                throw new ConversionException("Properly the MIME-Type guessing "
+                throw new RuntimeException("Properly the MIME-Type guessing "
                         + "failed and returned null", e);
             }
         }
@@ -178,19 +175,11 @@ public class StringToByteArrayConverter implements Converter<String, byte[]> {
         try {
             return serializer.serialize(dataUrl);
         } catch (MalformedURLException e) {
-            throw new ConversionException(e);
+            throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public Class<byte[]> getModelType() {
-        return byte[].class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
-    }
+    
+    
 
     /**
      * Guesses the {@link MimeType} of the given {@code byte[]} contents.
@@ -206,17 +195,10 @@ public class StringToByteArrayConverter implements Converter<String, byte[]> {
      */
     protected MimeType guessMimeType(byte[] data)
             throws IOException, IllegalArgumentException, NullPointerException {
-        String mimeTypeString;
-        InputStream is = null;
-        try {
-            is = new ByteArrayInputStream(data);
-            mimeTypeString = URLConnection.guessContentTypeFromStream(is);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
+        try (InputStream is = new ByteArrayInputStream(data)) {
+            String mimeTypeString = URLConnection.guessContentTypeFromStream(is);
+            return MimeType.valueOfMimeType(mimeTypeString);
         }
-        return MimeType.valueOfMimeType(mimeTypeString);
     }
 
     /**
